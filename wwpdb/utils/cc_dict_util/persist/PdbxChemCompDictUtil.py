@@ -79,7 +79,7 @@ class PdbxChemCompDictUtil(object):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.setContainerList(myReader.getContainerList())
             myPersist.store(dbFileName=tmpPath)
-            if self.__getFileSize > minSize:
+            if self.__getFileSize(tmpPath) > minSize:
                 myPersist.moveStore(tmpPath, storePath)
                 ok = True
                 if (self.__debug):
@@ -112,7 +112,7 @@ class PdbxChemCompDictUtil(object):
 
             tmpPath = storePath + "-tmpstore"
             myPersist.store(dbFileName=tmpPath)
-            if self.__getFileSize > minSize:
+            if self.__getFileSize(tmpPath) > minSize:
                 ok = True
                 myPersist.moveStore(tmpPath, storePath)
                 #

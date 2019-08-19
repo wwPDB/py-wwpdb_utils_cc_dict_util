@@ -41,7 +41,7 @@ setup(
         'Programming Language :: Python :: 3.7',
     ],
     #
-    install_requires=['mmcif.utils'],
+    install_requires=['mmcif.utils ~= 0.17'],
     packages=find_packages(exclude=['wwpdb.utils.tests-cc_dict_util', 'mock-data', 'tests.*']),
     package_data={
         # If any package contains *.md or *.rst ...  files, include them:
