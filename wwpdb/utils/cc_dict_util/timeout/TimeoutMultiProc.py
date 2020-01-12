@@ -32,8 +32,10 @@ Exception: Houston we have problems!
 
 """
 import multiprocessing
-import time,logging
-
+import time
+import logging
+import signal
+from functools import wraps
 
 class TimeoutException(Exception):
     def __init__(self, value):
@@ -65,8 +67,28 @@ class RunableProcessing(multiprocessing.Process):
         return self.queue.get()
 
 
-def timeout(seconds, force_kill=True):
+def timeout(seconds, message="Function call timed out"):
     def wrapper(function):
+        def _handleTimeout(signum, frame):
+            raise TimeoutException(message)
+
+        @wraps(function)
+        def wrapped(*args, **kwargs):
+            signal.signal(signal.SIGALRM, _handleTimeout)
+            signal.alarm(seconds)
+            try:
+                result = function(*args, **kwargs)
+            finally:
+                signal.alarm(0)
+            return result
+
+        return wrapped
+
+    return wrapper
+
+def timeoutMp(seconds, force_kill=True):
+    def wrapper(function):
+        @wraps(function)
         def inner(*args, **kwargs):
             now = time.time()
             proc = RunableProcessing(function, *args, **kwargs)
