@@ -17,7 +17,6 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
-import time
 import os
 import traceback
 
@@ -64,7 +63,7 @@ class PdbxChemCompDictUtil(object):
         try:
             st = os.stat(fPath)
             return st.st_size
-        except:
+        except:  # noqa: E722
             return 0
 
     def __makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
@@ -82,13 +81,13 @@ class PdbxChemCompDictUtil(object):
             if self.__getFileSize(tmpPath) > minSize:
                 myPersist.moveStore(tmpPath, storePath)
                 ok = True
-                if (self.__debug):
-                    indexD = myPersist.getIndex(dbFileName=storePath)
-                    # self.__lfh.write("Persistent index dictionary %r\n" % indexD.items())
+                # if (self.__debug):
+                #   indexD = myPersist.getIndex(dbFileName=storePath)
+                #   self.__lfh.write("Persistent index dictionary %r\n" % indexD.items())
             else:
                 ok = False
             return ok
-        except:
+        except:  # noqa: E722
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -116,12 +115,12 @@ class PdbxChemCompDictUtil(object):
                 ok = True
                 myPersist.moveStore(tmpPath, storePath)
                 #
-                if (self.__debug):
-                    indexD = myPersist.getIndex(dbFileName=storePath)
+                # if (self.__debug):
+                #   indexD = myPersist.getIndex(dbFileName=storePath)
             else:
                 ok = False
             return ok
-        except:
+        except:  # noqa: E722
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -133,13 +132,13 @@ class PdbxChemCompDictUtil(object):
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             for rPath in pathList:
-                ok = myReader.read(pdbxFilePath=rPath)
+                ok = myReader.read(pdbxFilePath=rPath)  # noqa: F841
 
-            myPersist = PdbxPersist(self.__verbose, self.__lfh)
-            myPersist.updateContainerList(dbFileName=storePath, containerList=myReader.getContainerList())
+                myPersist = PdbxPersist(self.__verbose, self.__lfh)
+                myPersist.updateContainerList(dbFileName=storePath, containerList=myReader.getContainerList())
             #
             return True
-        except:
+        except:  # noqa: E722
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -149,8 +148,8 @@ class PdbxChemCompDictUtil(object):
         """
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
-            myPersist.updateOneObject(inpObj, dbFileName=storePath, containerName=containerName, containerType=containerType)
-        except:
+            myPersist.updateOneObject(inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType)
+        except:  # noqa: E722
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -161,7 +160,7 @@ class PdbxChemCompDictUtil(object):
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateContainerList(dbFileName=storePath, containerList=containerList)
-        except:
+        except:  # noqa: E722
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False

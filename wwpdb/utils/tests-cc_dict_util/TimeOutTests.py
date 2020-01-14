@@ -12,51 +12,62 @@
 A collection of tests for timeout decorator functions.
 
 """
-__docformat__ = "restructuredtext en"
-__author__    = "John Westbrook"
-__email__     = "jwest@rcsb.rutgers.edu"
-__license__   = "Creative Commons Attribution 3.0 Unported"
-__version__   = "V0.01"
-
-
-import sys, unittest, traceback
-import sys, time, os, os.path, shutil
-import logging
-
+import sys
+import unittest
+import traceback
+import time
 
 from wwpdb.utils.cc_dict_util.timeout.TimeoutMultiProc import timeout, TimeoutException
 
+
 class TimeOutTests(unittest.TestCase):
     def setUp(self):
-        self.__lfh=sys.stderr
-        self.__verbose=True
-        
+        self.__lfh = sys.stderr
+        self.__verbose = True
+
     def tearDown(self):
         pass
 
     @timeout(10)
-    def longrunner(self,iSeconds=10):
+    def longrunner(self, iSeconds=10):
         self.__lfh.write("SLEEPING FOR %d seconds\n" % iSeconds)
         time.sleep(iSeconds)
-        self.__lfh.write("SLEEPING COMPLETED\n")        
+        self.__lfh.write("SLEEPING COMPLETED\n")
+
     def testTimeOut1(self):
-        """Test case -  
+        """Test case -
         """
         self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__,
-                                               sys._getframe().f_code.co_name))
+                                                 sys._getframe().f_code.co_name))
         try:
             self.longrunner(20)
         except TimeoutException:
             self.__lfh.write("Caught timeout exception %s %s\n" % sys.exc_info()[:2])
-        except:
+        except:  # noqa: E722; # pragma: no cover
+            traceback.print_exc(file=self.__lfh)
+            self.fail()
+        else:  # pragma: no cover
+            self.__lfh.write("Successful completion\n")
+            self.fail()
+
+    def testNoTimeOut1(self):
+        """Test case - sleep completes without timeout
+        """
+        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__,
+                                                 sys._getframe().f_code.co_name))
+        try:
+            # Shorter than expected timeout
+            self.longrunner(5)
+        except TimeoutException:  # pragma: no cover
+            # Should not happen
+            self.__lfh.write("Caught timeout exception %s %s\n" % sys.exc_info()[:2])
+            self.fail()
+        except:  # noqa: E722; # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
         else:
             self.__lfh.write("Successful completion\n")
 
 
-def suite():
-    return unittest.makeSuite(TimeOutTests,'test')
-
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     unittest.main()

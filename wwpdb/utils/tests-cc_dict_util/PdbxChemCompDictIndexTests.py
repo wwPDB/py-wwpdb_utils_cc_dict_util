@@ -60,7 +60,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.makeIndex(storePath=self.__persistStorePath, indexPath=self.__indexPath)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -86,7 +86,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             d1, d2 = dIndx.readParentComponentIndex(indexPath=self.__parentIndexPath)
             self.__lfh.write("+testCreateParentIndex() recovered parent dictionary length %r\n" % len(d1))
             self.__lfh.write("+testCreateParentIndex() recovered child dictionary length %r\n" % len(d2))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -107,7 +107,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.readIndex(indexPath=self.__indexPath)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -118,20 +118,20 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
                                                                        endTime - startTime))
 
 
-def suiteChemCompBuildIndex():
+def suiteChemCompBuildIndex():  # pgragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateIndex"))
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testReadIndex"))
     return suiteSelect
 
 
-def suiteChemCompBuildParentIndex():
+def suiteChemCompBuildParentIndex():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateParentIndex"))
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == '__main__':  # pragma: no cover
     #
     if (True):
         mySuite2 = suiteChemCompBuildIndex()

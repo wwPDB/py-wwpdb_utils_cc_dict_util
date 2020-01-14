@@ -19,7 +19,6 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
-from mmcif.api.PdbxContainers import *
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompConstants import PdbxChemCompConstants
 
 
@@ -37,7 +36,7 @@ class PdbxCategoryItBase(object):
     def get(self, index=0):
         try:
             return self.__rL[index]
-        except:
+        except:  # noqa: E722
             return []
 
     def __iter__(self):
@@ -121,7 +120,7 @@ class PdbxChemCompPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def getId(self):
@@ -207,7 +206,7 @@ class PdbxChemCompAtomPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def set(self, rowData=None):
@@ -232,7 +231,7 @@ class PdbxChemCompAtomPersist(object):
             if ((tyU == 'D') or (tyU == 'T')):
                 tyU = 'H'
             return PdbxChemCompConstants._periodicTable.index(tyU) + 1
-        except:
+        except:  # noqa: E722
             # traceback.print_exc(file=self.__lfh)
             return 0
 
@@ -254,7 +253,7 @@ class PdbxChemCompAtomPersist(object):
     def getFormalCharge(self):
         try:
             return int(self.__getAttribute('charge'))
-        except:
+        except:  # noqa: E722
             return 0
 
     def hasModelCoordinates(self):
@@ -281,7 +280,7 @@ class PdbxChemCompAtomPersist(object):
             y = float(self.__getAttribute('model_Cartn_y'))
             z = float(self.__getAttribute('model_Cartn_z'))
             return (x, y, z)
-        except:
+        except:  # noqa: E722
             return (None, None, None)
 
     def getIdealCoordinates(self):
@@ -292,7 +291,7 @@ class PdbxChemCompAtomPersist(object):
             y = float(self.__getAttribute('pdbx_model_Cartn_y_ideal'))
             z = float(self.__getAttribute('pdbx_model_Cartn_z_ideal'))
             return (x, y, z)
-        except:
+        except:  # noqa: E722
             return (None, None, None)
 
     def dump(self, ofh):
@@ -315,7 +314,7 @@ class PdbxChemCompBondPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def set(self, rowData=None):
@@ -372,7 +371,7 @@ class PdbxChemCompIdentifierPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def set(self, rowData=None):
@@ -413,7 +412,7 @@ class PdbxChemCompDescriptorPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def set(self, rowData=None):
@@ -454,7 +453,7 @@ class PdbxChemCompAuditPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:
+        except:  # noqa: E722
             return None
 
     def set(self, rowData=None):

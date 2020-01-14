@@ -19,16 +19,13 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
 import unittest
 import traceback
-import filecmp
 import fnmatch
 import sys
 import time
 import os
 import os.path
-import shutil
 import string
 
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictUtil import PdbxChemCompDictUtil
@@ -102,7 +99,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         try:
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromFile(dictPath=self.__pathChemCompDictFile, storePath=self.__persistStorePathA)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -129,7 +126,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             ifh.close()
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromPathList(pathList=ccPathList, storePath=self.__persistStorePathB)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -154,7 +151,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
                 self.__lfh.write("Pathlist length is %d\n" % len(ccPathList))
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromPathList(pathList=ccPathList, storePath=self.__persistStorePathB)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -181,7 +178,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.updateStoreByFile(pathList=ccPathList, storePath=self.__persistStorePathB)
             #
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 

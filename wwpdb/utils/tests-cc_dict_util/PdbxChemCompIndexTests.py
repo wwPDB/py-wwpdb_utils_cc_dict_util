@@ -20,7 +20,6 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
 import unittest
 import traceback
 import sys
@@ -61,7 +60,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.makeIndex(storePath=self.__persistStorePath, indexPath=self.__indexPath)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -87,7 +86,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             d1, d2 = dIndx.readParentComponentIndex(indexPath=self.__parentIndexPath)
             self.__lfh.write("+testCreateParentIndex() recovered parent dictionary %r\n" % d1.items())
             self.__lfh.write("+testCreateParentIndex() recovered child dictionary %r\n" % d2.items())
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -108,7 +107,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.readIndex(indexPath=self.__indexPath)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -119,19 +118,20 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
                                                                      endTime - startTime))
 
 
-def suiteChemCompBuildIndex():
+def suiteChemCompBuildIndex():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateIndex"))
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testReadIndex"))
     return suiteSelect
 
 
-def suiteChemCompBuildParentIndex():
+def suiteChemCompBuildParentIndex():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateParentIndex"))
     return suiteSelect
 
-if __name__ == '__main__':
+
+if __name__ == '__main__':  # pragma: no cover
     #
     if (False):
         mySuite2 = suiteChemCompBuildIndex()

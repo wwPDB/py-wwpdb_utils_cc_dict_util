@@ -29,7 +29,7 @@ try:
     import cPickle as pickle
 except ImportError:
     import pickle
-    
+
 from mmcif_utils.persist.PdbxPersist import PdbxPersist
 from mmcif.io.IoAdapterCore import IoAdapterCore as PdbxIoAdapter
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import PdbxChemCompIt, PdbxChemCompAtomIt, PdbxChemCompDescriptorIt, PdbxChemCompIdentifierIt
@@ -61,7 +61,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(pdbxFilePath=self.__pathChemCompDictFile)
             self.__lfh.write("Dictionary data block length  = %r\n" % len(cList))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -88,7 +88,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             #
             # indexD=myPersist.getIndex(dbFileName=self.__persistStorePath)
             # self.__lfh.write("Persistent index dictionary %r\n" % indexD.items())
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -121,7 +121,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                         myObj = container.getObj(objName)
                         myPersist = PdbxPersist(self.__verbose, self.__lfh)
                         myPersist.updateOneObject(myObj, dbFileName=self.__persistStorePath, containerName=containerName)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -150,7 +150,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 cList = myReader.readFile(pdbxFilePath=rPath)
                 myPersist = PdbxPersist(self.__verbose, self.__lfh)
                 myPersist.updateContainerList(dbFileName=self.__persistStorePath, containerList=cList)
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -171,7 +171,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             self.__lfh.write("Persistent index dictionary length %r\n" % len(indexD))
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -205,7 +205,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
             myPersist.close()
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -250,12 +250,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             for ccId, ccType in indexD['__containers__']:
                 dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
                 fS = dC.getValue('formula', 0)
-                d = self.__cnvChemCompFormulaToElementCounts(fS)
+                d = self.__cnvChemCompFormulaToElementCounts(fS)  # noqa: F841
                 # self.__lfh.write("Element counts %s %s ||  %r\n" % (ccId, fS, d.items()))
 
             myPersist.close()
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -294,7 +294,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myPersist.close()
             self.__lfh.write("Type count length: %r\n" % len(tCount))
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -333,7 +333,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
             myPersist.close()
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -424,7 +424,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                     for row in rowIt:
                         iden = row.getIdentifier()
                         idenType = row.getType()
-                        idenProgram = row.getProgram()
+                        idenProgram = row.getProgram()  # noqa: F841
                         if 'SYSTEMATIC' in idenType:
                             nameList.append(iden)
 
@@ -434,7 +434,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myPersist.close()
             pickle.dump(ccIdx, open(self.__indexPath, "wb"))
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -484,7 +484,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
                 self.__lfh.write("Match list for %s length %r\n" % (tId, len(mList)))
 
-        except:
+        except:  # noqa: E722
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
