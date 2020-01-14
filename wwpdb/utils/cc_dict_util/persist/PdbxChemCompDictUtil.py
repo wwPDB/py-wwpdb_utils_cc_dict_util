@@ -63,7 +63,7 @@ class PdbxChemCompDictUtil(object):
         try:
             st = os.stat(fPath)
             return st.st_size
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return 0
 
     def __makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
@@ -87,7 +87,7 @@ class PdbxChemCompDictUtil(object):
             else:
                 ok = False
             return ok
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -120,7 +120,7 @@ class PdbxChemCompDictUtil(object):
             else:
                 ok = False
             return ok
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -132,13 +132,13 @@ class PdbxChemCompDictUtil(object):
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             for rPath in pathList:
-                ok = myReader.read(pdbxFilePath=rPath)  # noqa: F841
+                _ok = myReader.read(pdbxFilePath=rPath)  # noqa: F841
 
                 myPersist = PdbxPersist(self.__verbose, self.__lfh)
                 myPersist.updateContainerList(dbFileName=storePath, containerList=myReader.getContainerList())
             #
             return True
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -149,7 +149,7 @@ class PdbxChemCompDictUtil(object):
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateOneObject(inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False
@@ -160,7 +160,7 @@ class PdbxChemCompDictUtil(object):
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateContainerList(dbFileName=storePath, containerList=containerList)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__debug):
                 traceback.print_exc(file=self.__lfh)
             return False

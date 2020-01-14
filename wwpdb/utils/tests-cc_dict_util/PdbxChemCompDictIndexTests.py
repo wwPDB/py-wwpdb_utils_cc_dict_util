@@ -31,6 +31,7 @@ import platform
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictIndex import PdbxChemCompDictIndex
 
 
+# pylint: disable=protected-access
 class PdbxChemCompDictIndexTests(unittest.TestCase):
 
     def setUp(self):
@@ -60,7 +61,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.makeIndex(storePath=self.__persistStorePath, indexPath=self.__indexPath)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -86,7 +87,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             d1, d2 = dIndx.readParentComponentIndex(indexPath=self.__parentIndexPath)
             self.__lfh.write("+testCreateParentIndex() recovered parent dictionary length %r\n" % len(d1))
             self.__lfh.write("+testCreateParentIndex() recovered child dictionary length %r\n" % len(d2))
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -107,7 +108,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.readIndex(indexPath=self.__indexPath)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -133,10 +134,9 @@ def suiteChemCompBuildParentIndex():  # pragma: no cover
 
 if __name__ == '__main__':  # pragma: no cover
     #
-    if (True):
-        mySuite2 = suiteChemCompBuildIndex()
-        unittest.TextTestRunner(verbosity=2).run(mySuite2)
+    mySuite2 = suiteChemCompBuildIndex()
+    unittest.TextTestRunner(verbosity=2).run(mySuite2)
 
-        mySuite1 = suiteChemCompBuildParentIndex()
-        unittest.TextTestRunner(verbosity=2).run(mySuite1)
+    mySuite1 = suiteChemCompBuildParentIndex()
+    unittest.TextTestRunner(verbosity=2).run(mySuite1)
     #

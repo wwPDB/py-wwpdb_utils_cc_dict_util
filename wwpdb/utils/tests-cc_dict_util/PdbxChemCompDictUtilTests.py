@@ -26,12 +26,12 @@ import sys
 import time
 import os
 import os.path
-import string
 
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictUtil import PdbxChemCompDictUtil
 from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
 
 
+# pylint: disable=protected-access
 @unittest.skip('Until tests ported')
 class PdbxChemCompDictUtilTests(unittest.TestCase):
 
@@ -58,11 +58,13 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def getPathList(self, topPath, pattern='*', excludeDirs=[], recurse=True):
+    def getPathList(self, topPath, pattern='*', excludeDirs=None, recurse=True):
         """ Return a list of file paths in the input topPath which satisfy the input search criteria.
 
             This version does not follow symbolic links.
         """
+        if excludeDirs is None:
+            excludeDirs = []
         pathList = []
         #
         try:
@@ -72,7 +74,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
 
         # expand pattern
         pattern = pattern or '*'
-        patternList = string.splitfields(pattern, ';')
+        patternList = str.split(pattern, ';')
 
         for name in names:
             fullname = os.path.normpath(os.path.join(topPath, name))
@@ -99,7 +101,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         try:
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromFile(dictPath=self.__pathChemCompDictFile, storePath=self.__persistStorePathA)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -126,7 +128,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             ifh.close()
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromPathList(pathList=ccPathList, storePath=self.__persistStorePathB)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -151,7 +153,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
                 self.__lfh.write("Pathlist length is %d\n" % len(ccPathList))
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromPathList(pathList=ccPathList, storePath=self.__persistStorePathB)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -178,7 +180,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.updateStoreByFile(pathList=ccPathList, storePath=self.__persistStorePathB)
             #
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
 

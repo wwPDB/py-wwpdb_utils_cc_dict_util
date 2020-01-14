@@ -40,6 +40,8 @@ from functools import wraps
 
 class TimeoutException(Exception):
     def __init__(self, value):
+        super(TimeoutException, self).__init__(value)
+
         self.value = value
 
     def __str__(self):

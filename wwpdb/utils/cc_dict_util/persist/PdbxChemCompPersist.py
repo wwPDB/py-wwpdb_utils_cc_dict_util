@@ -22,7 +22,7 @@ import sys
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompConstants import PdbxChemCompConstants
 
 
-class PdbxCategoryItBase(object):
+class PdbxCategoryItBase(PdbxChemCompConstants):
     """  Base category iterator class.
     """
 
@@ -36,7 +36,7 @@ class PdbxCategoryItBase(object):
     def get(self, index=0):
         try:
             return self.__rL[index]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return []
 
     def __iter__(self):
@@ -120,7 +120,7 @@ class PdbxChemCompPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def getId(self):
@@ -206,7 +206,7 @@ class PdbxChemCompAtomPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def set(self, rowData=None):
@@ -230,8 +230,8 @@ class PdbxChemCompAtomPersist(object):
             tyU = str(self.getType()).upper()
             if ((tyU == 'D') or (tyU == 'T')):
                 tyU = 'H'
-            return PdbxChemCompConstants._periodicTable.index(tyU) + 1
-        except:  # noqa: E722
+            return self._periodicTable.index(tyU) + 1
+        except:  # noqa: E722 pylint: disable=bare-except
             # traceback.print_exc(file=self.__lfh)
             return 0
 
@@ -253,7 +253,7 @@ class PdbxChemCompAtomPersist(object):
     def getFormalCharge(self):
         try:
             return int(self.__getAttribute('charge'))
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return 0
 
     def hasModelCoordinates(self):
@@ -280,7 +280,7 @@ class PdbxChemCompAtomPersist(object):
             y = float(self.__getAttribute('model_Cartn_y'))
             z = float(self.__getAttribute('model_Cartn_z'))
             return (x, y, z)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return (None, None, None)
 
     def getIdealCoordinates(self):
@@ -291,7 +291,7 @@ class PdbxChemCompAtomPersist(object):
             y = float(self.__getAttribute('pdbx_model_Cartn_y_ideal'))
             z = float(self.__getAttribute('pdbx_model_Cartn_z_ideal'))
             return (x, y, z)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return (None, None, None)
 
     def dump(self, ofh):
@@ -314,7 +314,7 @@ class PdbxChemCompBondPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def set(self, rowData=None):
@@ -371,7 +371,7 @@ class PdbxChemCompIdentifierPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def set(self, rowData=None):
@@ -412,7 +412,7 @@ class PdbxChemCompDescriptorPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def set(self, rowData=None):
@@ -453,7 +453,7 @@ class PdbxChemCompAuditPersist(object):
         try:
             i = self.__attributeNameList.index(name)
             return self.__rowData[i]
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return None
 
     def set(self, rowData=None):

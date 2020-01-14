@@ -34,6 +34,7 @@ class TimeOutTests(unittest.TestCase):
         time.sleep(iSeconds)
         self.__lfh.write("SLEEPING COMPLETED\n")
 
+    # pylint: disable=protected-access
     def testTimeOut1(self):
         """Test case -
         """
@@ -43,13 +44,14 @@ class TimeOutTests(unittest.TestCase):
             self.longrunner(20)
         except TimeoutException:
             self.__lfh.write("Caught timeout exception %s %s\n" % sys.exc_info()[:2])
-        except:  # noqa: E722; # pragma: no cover
+        except:  # noqa: E722; # pragma: no cover pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
         else:  # pragma: no cover
             self.__lfh.write("Successful completion\n")
             self.fail()
 
+    # pylint: disable=protected-access
     def testNoTimeOut1(self):
         """Test case - sleep completes without timeout
         """
@@ -62,7 +64,7 @@ class TimeOutTests(unittest.TestCase):
             # Should not happen
             self.__lfh.write("Caught timeout exception %s %s\n" % sys.exc_info()[:2])
             self.fail()
-        except:  # noqa: E722; # pragma: no cover
+        except:  # noqa: E722; # pragma: no cover pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
             self.fail()
         else:

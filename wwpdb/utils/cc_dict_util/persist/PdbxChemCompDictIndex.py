@@ -174,7 +174,7 @@ class PdbxChemCompDictIndex(object):
             with open(indexPath, "wb") as fout:
                 pickle.dump(ccIdx, fout, pickle.HIGHEST_PROTOCOL)
 
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__verbose):
                 self.__lfh.write("PdbxChemCompDictIndex(__makeIndex) index creation failed for %s index %s\n" % (storePath, indexPath))
             if (self.__debug):
@@ -227,7 +227,7 @@ class PdbxChemCompDictIndex(object):
             pickle.dump(cD, ofh, pickle.HIGHEST_PROTOCOL)
             ofh.close()
 
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             if (self.__verbose):
                 self.__lfh.write("PdbxChemCompDictIndex(__makeParentIndex) parent index creation failed for %s index %s\n" % (storePath, indexPath))
             if (self.__debug):
@@ -246,7 +246,7 @@ class PdbxChemCompDictIndex(object):
             cD = pickle.load(ifh)
             ifh.close()
             return pD, cD
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             pass
         return pD, cD
 
@@ -256,5 +256,5 @@ class PdbxChemCompDictIndex(object):
         try:
             with open(indexPath, "rb") as fin:
                 return pickle.load(fin)
-        except:  # noqa: E722
+        except:  # noqa: E722 pylint: disable=bare-except
             return {}
