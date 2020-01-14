@@ -32,24 +32,23 @@ from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
 
 
 # pylint: disable=protected-access
-@unittest.skip('Until tests ported')
+@unittest.skip("Until tests ported")
 class PdbxChemCompDictUtilTests(unittest.TestCase):
-
     def setUp(self):
         self.__lfh = sys.stdout
         self.__verbose = True
         self.__debug = False
 
-        self.__siteId = getSiteId(defaultSiteId='WWPDB_DEPLOY_TEST_RU')
+        self.__siteId = getSiteId(defaultSiteId="WWPDB_DEPLOY_TEST_RU")
         self.__lfh.write("\nTesting with site environment for:  %s\n" % self.__siteId)
         self.__cI = ConfigInfo(self.__siteId)
-        self.__ccDictPath = self.__cI.get('SITE_CC_DICT_PATH')
+        self.__ccDictPath = self.__cI.get("SITE_CC_DICT_PATH")
         #
         self.__pathChemCompDictFile = os.path.join(self.__ccDictPath, "Components-all-v3.cif")
         self.__pathList = os.path.join(self.__ccDictPath, "PATHLIST-v3")
         #
-        self.__pathChemCompCVS = self.__cI.get('SITE_CC_CVS_PATH')
-        self.__pathPrdChemCompCVS = self.__cI.get('SITE_PRDCC_CVS_PATH')
+        self.__pathChemCompCVS = self.__cI.get("SITE_CC_CVS_PATH")
+        self.__pathPrdChemCompCVS = self.__cI.get("SITE_PRDCC_CVS_PATH")
 
         self.__persistStorePathA = "chemcompA.db"
         self.__persistStorePathB = "chemcompB.db"
@@ -58,7 +57,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def tearDown(self):
         pass
 
-    def getPathList(self, topPath, pattern='*', excludeDirs=None, recurse=True):
+    def getPathList(self, topPath, pattern="*", excludeDirs=None, recurse=True):
         """ Return a list of file paths in the input topPath which satisfy the input search criteria.
 
             This version does not follow symbolic links.
@@ -73,8 +72,8 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             return pathList
 
         # expand pattern
-        pattern = pattern or '*'
-        patternList = str.split(pattern, ';')
+        pattern = pattern or "*"
+        patternList = str.split(pattern, ";")
 
         for name in names:
             fullname = os.path.normpath(os.path.join(topPath, name))
@@ -95,9 +94,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         """Test case -  read full chemical component dictionary and  create persistent store.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromFile(dictPath=self.__pathChemCompDictFile, storePath=self.__persistStorePathA)
@@ -106,10 +103,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testCreateStorePathList(self):
         """Test case -  create persistent store from a path list of chemical component defintions.
@@ -117,12 +114,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
                         Extract the path list from the distributed path list file.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             ccPathList = []
-            ifh = open(self.__pathList, 'r')
+            ifh = open(self.__pathList, "r")
             for line in ifh:
                 ccPathList.append(line[:-1])
             ifh.close()
@@ -133,10 +128,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testCreateStorePathListFS(self):
         """Test case -  create persistent store from a path list of chemical component defintions.
@@ -144,12 +139,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
                         Extract the path list by searching the file system.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
-            ccPathList = self.getPathList(topPath=self.__pathChemCompCVS, pattern="*.cif", excludeDirs=['CVS', 'REMOVED', 'FULL'])
-            if (self.__verbose):
+            ccPathList = self.getPathList(topPath=self.__pathChemCompCVS, pattern="*.cif", excludeDirs=["CVS", "REMOVED", "FULL"])
+            if self.__verbose:
                 self.__lfh.write("Pathlist length is %d\n" % len(ccPathList))
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
             dUtil.makeStoreFromPathList(pathList=ccPathList, storePath=self.__persistStorePathB)
@@ -158,10 +151,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testUpdateStorePathList(self):
         """Test case -  update persistent store from a path list of chemical component defintions.
@@ -169,12 +162,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
                         Extract the path list from the distributed path list file.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
-            ccPathList = self.getPathList(topPath=self.__pathPrdChemCompCVS, pattern="*.cif", excludeDirs=['CVS', 'REMOVED', 'FULL'])
-            if (self.__verbose):
+            ccPathList = self.getPathList(topPath=self.__pathPrdChemCompCVS, pattern="*.cif", excludeDirs=["CVS", "REMOVED", "FULL"])
+            if self.__verbose:
                 self.__lfh.write("Pathlist length is %d\n" % len(ccPathList))
             #
             dUtil = PdbxChemCompDictUtil(verbose=self.__verbose, log=self.__lfh)
@@ -185,10 +176,10 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
 
 def suiteChemCompBuildStore():
@@ -205,9 +196,9 @@ def suiteChemCompUpdateStore():
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     #
-    if (not os.access("chemcompA.db", os.F_OK)):
+    if not os.access("chemcompA.db", os.F_OK):
         mySuite1 = suiteChemCompBuildStore()
         unittest.TextTestRunner(verbosity=2).run(mySuite1)
 

@@ -48,7 +48,7 @@ class PdbxChemCompDictUtil(object):
         """
         return self.__updateStoreByFile(pathList, storePath=storePath)
 
-    def updateStoreByObject(self, inpObject, containerName=None, containerType='data', storePath="chemcomp.db"):
+    def updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
         """ Update the persistant store with the contents of the input object in the input named container.
         """
         return self.__updateStoreByObject(inpObject, containerName=containerName, containerType=containerType, storePath=storePath)
@@ -57,6 +57,7 @@ class PdbxChemCompDictUtil(object):
         """Update the persistant store with the contents of the input container list.
         """
         return self.__updateStoreByContainer(containerList=containerList, storePath=storePath)
+
     ##
 
     def __getFileSize(self, fPath):
@@ -88,7 +89,7 @@ class PdbxChemCompDictUtil(object):
                 ok = False
             return ok
         except:  # noqa: E722 pylint: disable=bare-except
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False
 
@@ -106,7 +107,7 @@ class PdbxChemCompDictUtil(object):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.setContainerList(myReader.getContainerList())
 
-            if (self.__verbose):
+            if self.__verbose:
                 self.__lfh.write("Read completed for %d definitions\n" % len(pathList))
 
             tmpPath = storePath + "-tmpstore"
@@ -121,7 +122,7 @@ class PdbxChemCompDictUtil(object):
                 ok = False
             return ok
         except:  # noqa: E722 pylint: disable=bare-except
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False
 
@@ -139,18 +140,18 @@ class PdbxChemCompDictUtil(object):
             #
             return True
         except:  # noqa: E722 pylint: disable=bare-except
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False
 
-    def __updateStoreByObject(self, inpObject, containerName=None, containerType='data', storePath="chemcomp.db"):
+    def __updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
         """ Internal method to update the persistant store with the contents of the input object in the input named container.
         """
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateOneObject(inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType)
         except:  # noqa: E722 pylint: disable=bare-except
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False
 
@@ -161,6 +162,6 @@ class PdbxChemCompDictUtil(object):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateContainerList(dbFileName=storePath, containerList=containerList)
         except:  # noqa: E722 pylint: disable=bare-except
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False

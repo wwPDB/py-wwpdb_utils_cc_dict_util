@@ -24,7 +24,10 @@ import traceback
 import time
 import os
 import os.path
+import platform
 import string
+import glob
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -36,17 +39,37 @@ from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import PdbxChemCompIt,
 
 
 # pylint: disable=protected-access
-@unittest.skip('Until tests are ported')
 class PdbxChemCompPersistTests(unittest.TestCase):
-
     def setUp(self):
         self.__lfh = sys.stderr
         self.__verbose = True
         self.__debug = False
-        self.__pathChemCompDictFile = "/data/components/cc-dict/Components-all-v3.cif"
-        self.__pathList = "/data/components/cc-dict/PATHLIST-v3"
-        self.__persistStorePath = "chemcomp.db"
-        self.__indexPath = "chemcomp-index.pic"
+        HERE = os.path.abspath(os.path.dirname(__file__))
+        TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
+        if not os.path.exists(TESTOUTPUT):
+            os.makedirs(TESTOUTPUT)
+        DATAINP = os.path.join(HERE, "data", "ligand-dict-v3") 
+        self.__pathChemCompDictFile = os.path.join(TESTOUTPUT, "Components-all-v3.cif")
+        self.__pathList = os.path.join(TESTOUTPUT, "PATHLIST-v3")
+        self.__persistStorePath = os.path.join(TESTOUTPUT, "chemcomp.db")
+        self.__indexPath = os.path.join(TESTOUTPUT, "chemcomp-index.pic")
+        self.__createFiles(DATAINP, self.__pathChemCompDictFile, self.__pathList)
+
+    def __createFiles(self, source, combined, pathlist):
+        # Get list of files
+        entlist = glob.glob(source + "/*.cif")
+
+        # Pathlist creation
+        with open(pathlist, "w") as fout:
+            for ent in entlist:
+                fout.write(ent + "\n")
+
+        # Combined file
+        with open(combined, "w") as fout:
+            for ent in entlist:
+                with open(ent, "r") as fin:
+                    fout.write(fin.read())
+                fout.write("\n")
 
     def tearDown(self):
         pass
@@ -55,9 +78,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """Test case -  read chemical component dictionary.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(inputFilePath=self.__pathChemCompDictFile)
@@ -67,18 +88,16 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompCreateStore(self):
         """Test case -  read chemical component dictionary and  create persistent store.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(inputFilePath=self.__pathChemCompDictFile)
@@ -94,21 +113,19 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompUpdateStoreByObject(self):
         """Test case -  update persistent store with replacement data by object.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             replacePathList = []
-            ifh = open(self.__pathList, 'r')
+            ifh = open(self.__pathList, "r")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
@@ -127,21 +144,19 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompUpdateStoreByContainer(self):
         """Test case -  update persistent store with replacement data by container.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             replacePathList = []
-            ifh = open(self.__pathList, 'r')
+            ifh = open(self.__pathList, "r")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
@@ -156,18 +171,16 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompGetDictionaryIndex(self):
         """Test case - recover index from persistent store
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -177,27 +190,25 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompFetchStatus(self):
         """Test case -  read component dictionary index and fetch release status value from each chem_comp category
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
 
             myPersist.open(dbFileName=self.__persistStorePath)
             sD = {}
-            for ccId, _ccType in indexD['__containers__']:
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
-                sV = dC.getValue('pdbx_release_status', 0)
+            for ccId, _ccType in indexD["__containers__"]:
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
+                sV = dC.getValue("pdbx_release_status", 0)
                 if sV not in sD:
                     sD[sV] = 1
                 else:
@@ -211,10 +222,10 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def __cnvChemCompFormulaToElementCounts(self, fS):
         """ Convert formula format from chemical component definition to an element count dictionary.
@@ -223,8 +234,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         eD = {}
         fL = fS.split()
         for f in fL:
-            el = ''
-            cnt = ''
+            el = ""
+            cnt = ""
             for ch in f:
                 if ch in string.ascii_letters:
                     el += ch
@@ -240,17 +251,15 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """Test case -  read component dictionary index and fetch release status value from each chem_comp category
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
 
             myPersist.open(dbFileName=self.__persistStorePath)
-            for ccId, _ccType in indexD['__containers__']:
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
-                fS = dC.getValue('formula', 0)
+            for ccId, _ccType in indexD["__containers__"]:
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
+                fS = dC.getValue("formula", 0)
                 _d = self.__cnvChemCompFormulaToElementCounts(fS)  # noqa: F841
                 # self.__lfh.write("Element counts %s %s ||  %r\n" % (ccId, fS, d.items()))
 
@@ -261,25 +270,23 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompFetchAtoms(self):
         """Test case -  read component dictionary index and fetch all chem_comp categories
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             tCount = {}
             myPersist.open(dbFileName=self.__persistStorePath)
-            for ccId, _ccType in indexD['__containers__']:
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp_atom')
+            for ccId, _ccType in indexD["__containers__"]:
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is None:
                     continue
                 #
@@ -300,25 +307,23 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompCompareDescriptors(self):
         """Test case -  read component dictionary index and compare all descriptors.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             # tCount = {}
             myPersist.open(dbFileName=self.__persistStorePath)
-            for ccId, _ccType in indexD['__containers__']:
-                dC = myPersist.fetchObject(containerName=ccId, objectName='pdbx_chem_comp_descriptor')
+            for ccId, _ccType in indexD["__containers__"]:
+                dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is None:
                     continue
                 #
@@ -339,56 +344,54 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompMakeSearchIndex(self):
         """Test case -  read component dictionary index and build a search index.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             ccIdx = {}
             myPersist.open(dbFileName=self.__persistStorePath)
-            for ccId, _ccType in indexD['__containers__']:
+            for ccId, _ccType in indexD["__containers__"]:
                 #
                 d = {}
-                d['nameList'] = []
-                d['typeCounts'] = {}
-                d['InChI'] = None
-                d['InChIKey'] = None
-                d['smiles'] = None
-                d['smilesStereo'] = None
-                d['releaseStatus'] = None
-                d['subcomponentList'] = None
+                d["nameList"] = []
+                d["typeCounts"] = {}
+                d["InChI"] = None
+                d["InChIKey"] = None
+                d["smiles"] = None
+                d["smilesStereo"] = None
+                d["releaseStatus"] = None
+                d["subcomponentList"] = None
                 #
                 #
                 nameList = []
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
                     rowIt = PdbxChemCompIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         name = row.getName()
                         synonyms = row.getSynonyms()
-                        d['releaseStatus'] = row.getReleaseStatus()
-                        d['subcomponentList'] = row.getSubComponentList()
+                        d["releaseStatus"] = row.getReleaseStatus()
+                        d["subcomponentList"] = row.getSubComponentList()
 
                     nameList.append(name)
-                    if ';' in synonyms:
-                        sList = synonyms.split(';')
+                    if ";" in synonyms:
+                        sList = synonyms.split(";")
                         nameList.extend(sList)
                     else:
                         nameList.append(synonyms)
 
                 # Compute element/type counts directly from the definition atom list
                 typeCounts = {}
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp_atom')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is not None:
                     rowIt = PdbxChemCompAtomIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
@@ -397,39 +400,39 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                             typeCounts[aType] = 1
                         else:
                             typeCounts[aType] += 1
-                    d['typeCounts'] = typeCounts
+                    d["typeCounts"] = typeCounts
 
                 #
-                dC = myPersist.fetchObject(containerName=ccId, objectName='pdbx_chem_comp_descriptor')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is not None:
                     rowIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         des = row.getDescriptor()
                         desType = row.getType()
                         desProgram = row.getProgram()
-                        if 'OpenEye' in desProgram:
-                            if desType == 'SMILES_CANNONICAL':
-                                d['smilesStereo'] = des
-                            elif desType == 'SMILES':
-                                d['smilesStereo'] = des
-                        elif 'InChI' in desProgram:
-                            if desType == 'InChI':
-                                d['InChI'] = des
-                            elif desType == 'InChIKey':
-                                d['InChIKey'] = des
+                        if "OpenEye" in desProgram:
+                            if desType == "SMILES_CANNONICAL":
+                                d["smilesStereo"] = des
+                            elif desType == "SMILES":
+                                d["smilesStereo"] = des
+                        elif "InChI" in desProgram:
+                            if desType == "InChI":
+                                d["InChI"] = des
+                            elif desType == "InChIKey":
+                                d["InChIKey"] = des
                 #
 
-                dC = myPersist.fetchObject(containerName=ccId, objectName='pdbx_chem_comp_identifier')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_identifier")
                 if dC is not None:
                     rowIt = PdbxChemCompIdentifierIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         iden = row.getIdentifier()
                         idenType = row.getType()
                         _idenProgram = row.getProgram()  # noqa: F841
-                        if 'SYSTEMATIC' in idenType:
+                        if "SYSTEMATIC" in idenType:
                             nameList.append(iden)
 
-                d['nameList'] = nameList
+                d["nameList"] = nameList
                 ccIdx[ccId] = d
 
             myPersist.close()
@@ -440,22 +443,20 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
     def testChemCompSearchIndex(self):
         """Test case -  read component index and test formula filters.
         """
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__,
-                                                       sys._getframe().f_code.co_name,
-                                                       time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             # A few target formulas to test search --
             #
-            targetD = {'t1': {'C': 16, 'O': 2}, 't2': {'C': 14, 'O': 4}, 't3': {'C': 12, 'N': 1, 'Cl': 2}}
+            targetD = {"t1": {"C": 16, "O": 2}, "t2": {"C": 14, "O": 4}, "t3": {"C": 12, "N": 1, "Cl": 2}}
             #
             # upper and lower bounds about the target formula.
             offsetU = 2
@@ -466,20 +467,20 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             for tId, tf in targetD.items():
                 mList = []
                 for ccId, d in ccIdx.items():
-                    refC = d['typeCounts']
+                    refC = d["typeCounts"]
                     #
                     mOk = True
                     for ftype, cnt in tf.items():
                         typeU = ftype.upper()
                         if typeU in refC:
-                            if ((cnt < refC[typeU] - offsetL) or (cnt > refC[typeU] + offsetU)):
+                            if (cnt < refC[typeU] - offsetL) or (cnt > refC[typeU] + offsetU):
                                 mOk = False
                                 break
                         else:
                             mOk = False
                             break
                     if mOk:
-                        if (self.__debug):
+                        if self.__debug:
                             self.__lfh.write("Match %s target %r reference %s %r\n" % (tId, tf, ccId, refC))
                         mList.append(ccId)
 
@@ -490,10 +491,10 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.fail()
 
         endTime = time.time()
-        self.__lfh.write("\nCompleted %s %s at %s (%d seconds)\n" % (self.__class__.__name__,
-                                                                     sys._getframe().f_code.co_name,
-                                                                     time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
-                                                                     endTime - startTime))
+        self.__lfh.write(
+            "\nCompleted %s %s at %s (%d seconds)\n"
+            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+        )
 
 
 def suiteChemCompBuildStore():
@@ -527,15 +528,15 @@ def suiteChemCompUpdate():
     return suiteSelect
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     # Run all tests --
     # unittest.main()
     #
-    if (not os.access("chemcomp.db", os.F_OK)):
+    if not os.access("chemcomp.db", os.F_OK):
         mySuite1 = suiteChemCompBuildStore()
         unittest.TextTestRunner(verbosity=2).run(mySuite1)
     #
-    if (not os.access("chemcomp-index.pic", os.F_OK)):
+    if not os.access("chemcomp-index.pic", os.F_OK):
         mySuite2 = suiteChemCompIndex()
         unittest.TextTestRunner(verbosity=2).run(mySuite2)
     #

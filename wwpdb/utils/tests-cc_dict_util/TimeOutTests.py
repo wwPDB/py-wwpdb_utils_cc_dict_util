@@ -38,8 +38,7 @@ class TimeOutTests(unittest.TestCase):
     def testTimeOut1(self):
         """Test case -
         """
-        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__,
-                                                 sys._getframe().f_code.co_name))
+        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
         try:
             self.longrunner(20)
         except TimeoutException:
@@ -55,8 +54,7 @@ class TimeOutTests(unittest.TestCase):
     def testNoTimeOut1(self):
         """Test case - sleep completes without timeout
         """
-        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__,
-                                                 sys._getframe().f_code.co_name))
+        self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
         try:
             # Shorter than expected timeout
             self.longrunner(5)
@@ -71,5 +69,5 @@ class TimeOutTests(unittest.TestCase):
             self.__lfh.write("Successful completion\n")
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     unittest.main()

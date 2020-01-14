@@ -33,6 +33,7 @@ Exception: Houston we have problems!
 """
 import multiprocessing
 import time
+
 # import logging
 import signal
 from functools import wraps
@@ -105,17 +106,20 @@ def timeoutMp(seconds, force_kill=True):  # pragma: no cover
                 if force_kill:
                     proc.terminate()
                 runtime = int(time.time() - now)
-                raise TimeoutException('timed out after {0} seconds'.format(runtime))
+                raise TimeoutException("timed out after {0} seconds".format(runtime))
             assert proc.done()
             success, result = proc.result()
             if success:
                 return result
             else:
                 raise result
+
         return inner
+
     return wrapper
 
 
-if __name__ == '__main__':  # pragma: no cover
+if __name__ == "__main__":  # pragma: no cover
     import doctest
+
     doctest.testmod()
