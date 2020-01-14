@@ -48,7 +48,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
         if not os.path.exists(TESTOUTPUT):
             os.makedirs(TESTOUTPUT)
-        DATAINP = os.path.join(HERE, "data", "ligand-dict-v3") 
+        DATAINP = os.path.join(HERE, "data", "ligand-dict-v3")
         self.__pathChemCompDictFile = os.path.join(TESTOUTPUT, "Components-all-v3.cif")
         self.__pathList = os.path.join(TESTOUTPUT, "PATHLIST-v3")
         self.__persistStorePath = os.path.join(TESTOUTPUT, "chemcomp.db")
@@ -123,6 +123,9 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         try:
             replacePathList = []
             ifh = open(self.__pathList, "r")
@@ -154,6 +157,9 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         try:
             replacePathList = []
             ifh = open(self.__pathList, "r")
@@ -181,6 +187,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -198,6 +206,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompFetchStatus(self):
         """Test case -  read component dictionary index and fetch release status value from each chem_comp category
         """
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -252,6 +262,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -278,6 +290,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompFetchAtoms(self):
         """Test case -  read component dictionary index and fetch all chem_comp categories
         """
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -315,6 +329,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompCompareDescriptors(self):
         """Test case -  read component dictionary index and compare all descriptors.
         """
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -354,6 +370,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        if not os.path.exists(self.__persistStorePath):
+            self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
