@@ -46,6 +46,9 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         self.__persistStorePath = os.path.join(outdir, "chemcomp.db")
         self.__indexPath = os.path.join(outdir, "chemcomp-index.pic")
         self.__parentIndexPath = os.path.join(outdir, "chemcomp-parent-index.pic")
+        # But if persistStore is not setup, these tests will fail.
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
+            os.system("python %s/PdbxChemCompPersistTests.py" % here)
 
     def tearDown(self):
         pass
