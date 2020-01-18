@@ -454,7 +454,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 ccIdx[ccId] = d
 
             myPersist.close()
-            pickle.dump(ccIdx, open(self.__indexPath, "wb"))
+            with open(self.__indexPath, "wb") as fout:
+                pickle.dump(ccIdx, fout)
 
         except:  # noqa: E722 pylint: disable=bare-except
             traceback.print_exc(file=self.__lfh)
@@ -480,7 +481,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             offsetU = 2
             offsetL = 2
             #
-            ccIdx = pickle.load(open(self.__indexPath, "rb"))
+            with open(self.__indexPath, "rb") as fin:
+                ccIdx = pickle.load(fin)
             #
             for tId, tf in targetD.items():
                 mList = []
