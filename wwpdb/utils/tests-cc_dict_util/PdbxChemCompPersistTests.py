@@ -46,7 +46,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         self.__debug = False
         HERE = os.path.abspath(os.path.dirname(__file__))
         TESTOUTPUT = os.path.join(HERE, "test-output", platform.python_version())
-        if not os.path.exists(TESTOUTPUT):
+        if not os.path.exists(TESTOUTPUT):  # pragma: no cover
             os.makedirs(TESTOUTPUT)
         DATAINP = os.path.join(HERE, "data", "ligand-dict-v3")
         self.__pathChemCompDictFile = os.path.join(TESTOUTPUT, "Components-all-v3.cif")
@@ -124,7 +124,8 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
 
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
+
             self.testChemCompCreateStore()
         try:
             replacePathList = []
@@ -158,7 +159,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
 
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
             replacePathList = []
@@ -187,7 +188,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
@@ -206,7 +207,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompFetchStatus(self):
         """Test case -  read component dictionary index and fetch release status value from each chem_comp category
         """
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
@@ -262,7 +263,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
@@ -290,7 +291,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompFetchAtoms(self):
         """Test case -  read component dictionary index and fetch all chem_comp categories
         """
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
@@ -329,7 +330,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompCompareDescriptors(self):
         """Test case -  read component dictionary index and compare all descriptors.
         """
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
@@ -370,7 +371,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
-        if not os.path.exists(self.__persistStorePath):
+        if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
