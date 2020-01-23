@@ -1,0 +1,4 @@
+mmcif.utils ~= 0.17
+# needed for testing
+wwpdb.utils.config
+

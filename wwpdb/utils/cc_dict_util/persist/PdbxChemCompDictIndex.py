@@ -24,8 +24,8 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
-import time
 import traceback
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -81,50 +81,50 @@ class PdbxChemCompDictIndex(object):
             for ccId in containerList:
                 #
                 d = {}
-                d['ccId'] = ccId
-                d['nameList'] = []
-                d['typeCounts'] = {}
-                d['InChI'] = None
-                d['InChIKey'] = None
-                d['InChIKey14'] = None
-                d['smiles'] = None
-                d['smilesList'] = []
-                d['smilesStereo'] = None
-                d['releaseStatus'] = None
-                d['subcomponentList'] = None
+                d["ccId"] = ccId
+                d["nameList"] = []
+                d["typeCounts"] = {}
+                d["InChI"] = None
+                d["InChIKey"] = None
+                d["InChIKey14"] = None
+                d["smiles"] = None
+                d["smilesList"] = []
+                d["smilesStereo"] = None
+                d["releaseStatus"] = None
+                d["subcomponentList"] = None
                 #
-                d['name'] = None
-                d['type'] = None
-                d['formula'] = None
-                d['formulaWeight'] = None
+                d["name"] = None
+                d["type"] = None
+                d["formula"] = None
+                d["formulaWeight"] = None
                 #
                 nameList = []
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
                     rowIt = PdbxChemCompIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         name = row.getName()
                         synonyms = row.getSynonyms()
-                        d['releaseStatus'] = row.getReleaseStatus()
-                        d['subcomponentList'] = row.getSubComponentList()
-                        d['name'] = name
-                        d['synonyms'] = synonyms
-                        d['type'] = row.getType()
-                        d['formula'] = row.getFormula()
-                        d['formulaWeight'] = row.getFormulaWeight()
-                        d['ambiguousFlag'] = row.getAmbiguousFlag()
+                        d["releaseStatus"] = row.getReleaseStatus()
+                        d["subcomponentList"] = row.getSubComponentList()
+                        d["name"] = name
+                        d["synonyms"] = synonyms
+                        d["type"] = row.getType()
+                        d["formula"] = row.getFormula()
+                        d["formulaWeight"] = row.getFormulaWeight()
+                        d["ambiguousFlag"] = row.getAmbiguousFlag()
 
                     nameList.append(name)
-                    if (synonyms is not None):
-                        if ';' in synonyms:
-                            sList = synonyms.split(';')
+                    if synonyms is not None:
+                        if ";" in synonyms:
+                            sList = synonyms.split(";")
                             nameList.extend(sList)
                         else:
                             nameList.append(synonyms)
 
                 # Compute element/type counts directly from the definition atom list
                 typeCounts = {}
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp_atom')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is not None:
                     rowIt = PdbxChemCompAtomIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
@@ -133,52 +133,52 @@ class PdbxChemCompDictIndex(object):
                             typeCounts[aType] = 1
                         else:
                             typeCounts[aType] += 1
-                    d['typeCounts'] = typeCounts
+                    d["typeCounts"] = typeCounts
 
                 #
-                dC = myPersist.fetchObject(containerName=ccId, objectName='pdbx_chem_comp_descriptor')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is not None:
                     rowIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         des = row.getDescriptor()
                         desType = row.getType()
                         desProgram = row.getProgram()
-                        if desType.startswith('SMILES'):
-                            d['smilesList'].append(des)
-                        if 'OpenEye' in desProgram:
-                            if desType == 'SMILES_CANNONICAL':
-                                d['smilesStereo'] = des
-                            elif desType == 'SMILES':
-                                d['smiles'] = des
-                        elif 'InChI' in desProgram:
-                            if desType == 'InChI':
-                                d['InChI'] = des
-                            elif desType == 'InChIKey':
-                                d['InChIKey'] = des
-                                d['InChIKey14'] = des[:14]
+                        if desType.startswith("SMILES"):
+                            d["smilesList"].append(des)
+                        if "OpenEye" in desProgram:
+                            if desType == "SMILES_CANNONICAL":
+                                d["smilesStereo"] = des
+                            elif desType == "SMILES":
+                                d["smiles"] = des
+                        elif "InChI" in desProgram:
+                            if desType == "InChI":
+                                d["InChI"] = des
+                            elif desType == "InChIKey":
+                                d["InChIKey"] = des
+                                d["InChIKey14"] = des[:14]
                 #
 
-                dC = myPersist.fetchObject(containerName=ccId, objectName='pdbx_chem_comp_identifier')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_identifier")
                 if dC is not None:
                     rowIt = PdbxChemCompIdentifierIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         iden = row.getIdentifier()
                         idenType = row.getType()
                         # idenProgram = row.getProgram()
-                        if 'SYSTEMATIC' in idenType:
+                        if "SYSTEMATIC" in idenType:
                             nameList.append(iden)
 
-                d['nameList'] = nameList
+                d["nameList"] = nameList
                 ccIdx[ccId] = d
 
             myPersist.close()
             with open(indexPath, "wb") as fout:
                 pickle.dump(ccIdx, fout, pickle.HIGHEST_PROTOCOL)
 
-        except:
-            if (self.__verbose):
+        except:  # noqa: E722 pylint: disable=bare-except
+            if self.__verbose:
                 self.__lfh.write("PdbxChemCompDictIndex(__makeIndex) index creation failed for %s index %s\n" % (storePath, indexPath))
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
         return ccIdx
@@ -198,17 +198,17 @@ class PdbxChemCompDictIndex(object):
 
             for ccId in containerList:
                 #
-                dC = myPersist.fetchObject(containerName=ccId, objectName='chem_comp')
+                dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
                     rowIt = PdbxChemCompIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         pCompId = row.getNstdParentId()
                         compId = row.getId()
                         #
-                        if ((pCompId is not None) and (len(pCompId) > 0) and (pCompId not in ['?', '.'])):
+                        if (pCompId is not None) and (len(pCompId) > 0) and (pCompId not in ["?", "."]):
 
-                            if ',' in pCompId:
-                                pList = pCompId.split(',')
+                            if "," in pCompId:
+                                pList = pCompId.split(",")
                                 cD[compId] = pList
                             else:
                                 if len(pCompId) > 3:
@@ -228,10 +228,10 @@ class PdbxChemCompDictIndex(object):
             pickle.dump(cD, ofh, pickle.HIGHEST_PROTOCOL)
             ofh.close()
 
-        except:
-            if (self.__verbose):
+        except:  # noqa: E722 pylint: disable=bare-except
+            if self.__verbose:
                 self.__lfh.write("PdbxChemCompDictIndex(__makeParentIndex) parent index creation failed for %s index %s\n" % (storePath, indexPath))
-            if (self.__debug):
+            if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
         return pD, cD
@@ -247,7 +247,7 @@ class PdbxChemCompDictIndex(object):
             cD = pickle.load(ifh)
             ifh.close()
             return pD, cD
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             pass
         return pD, cD
 
@@ -257,5 +257,5 @@ class PdbxChemCompDictIndex(object):
         try:
             with open(indexPath, "rb") as fin:
                 return pickle.load(fin)
-        except:
+        except:  # noqa: E722 pylint: disable=bare-except
             return {}
