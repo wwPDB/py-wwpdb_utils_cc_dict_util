@@ -19,10 +19,13 @@ __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
 import sys
+
+# import traceback
+
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompConstants import PdbxChemCompConstants
 
 
-class PdbxCategoryItBase(PdbxChemCompConstants):
+class PdbxCategoryItBase(object):
     """  Base category iterator class.
     """
 
@@ -184,12 +187,13 @@ class PdbxChemCompPersist(object):
         return self.__getAttribute("pdbx_ideal_coordinates_missing_flag")
 
 
-class PdbxChemCompAtomPersist(object):
+class PdbxChemCompAtomPersist(PdbxChemCompConstants):
     """ Accessor methods chemical component atom attributes.
 
     """
 
     def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
+        super(PdbxChemCompAtomPersist, self).__init__()
         self.__verbose = verbose
         self.__debug = False
         self.__lfh = log

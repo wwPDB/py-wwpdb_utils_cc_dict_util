@@ -83,7 +83,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(inputFilePath=self.__pathChemCompDictFile)
             self.__lfh.write("Dictionary data block length  = %r\n" % len(cList))
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -108,7 +108,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             #
             # indexD=myPersist.getIndex(dbFileName=self.__persistStorePath)
             # self.__lfh.write("Persistent index dictionary %r\n" % indexD.items())
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -143,7 +143,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                         myObj = container.getObj(objName)
                         myPersist = PdbxPersist(self.__verbose, self.__lfh)
                         myPersist.updateOneObject(myObj, dbFileName=self.__persistStorePath, containerName=containerName)
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -173,7 +173,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 cList = myReader.readFile(inputFilePath=rPath)
                 myPersist = PdbxPersist(self.__verbose, self.__lfh)
                 myPersist.updateContainerList(dbFileName=self.__persistStorePath, containerList=cList)
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -194,7 +194,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             self.__lfh.write("Persistent index dictionary length %r\n" % len(indexD))
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -228,7 +228,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
             myPersist.close()
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -278,7 +278,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
             myPersist.close()
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -300,6 +300,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
             tCount = {}
             myPersist.open(dbFileName=self.__persistStorePath)
+            first = True
             for ccId, _ccType in indexD["__containers__"]:
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is None:
@@ -313,11 +314,17 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                         tCount[aType] = 1
                     else:
                         tCount[aType] += 1
-                    # atom.dump(self.__lfh)
+                    if first:
+                        atom.dump(self.__lfh)
+                        first = False
+                    self.assertNotEqual(atom.getAtNo(), 0)
+                    isotope = atom.getIsotope()
+                    self.assertTrue(isotope <= 3 and isotope >= 0)
+
             myPersist.close()
             self.__lfh.write("Type count length: %r\n" % len(tCount))
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -356,7 +363,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
 
             myPersist.close()
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -458,7 +465,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             with open(self.__indexPath, "wb") as fout:
                 pickle.dump(ccIdx, fout)
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -501,13 +508,13 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                             mOk = False
                             break
                     if mOk:
-                        if self.__debug:
+                        if self.__debug:  # pragma: no cover
                             self.__lfh.write("Match %s target %r reference %s %r\n" % (tId, tf, ccId, refC))
                         mList.append(ccId)
 
                 self.__lfh.write("Match list for %s length %r\n" % (tId, len(mList)))
 
-        except:  # noqa: E722 pylint: disable=bare-except
+        except:  # noqa: E722 pylint: disable=bare-except;   # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
 
@@ -518,14 +525,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
 
-def suiteChemCompBuildStore():
+def suiteChemCompBuildStore():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompReadDictionary"))
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompCreateStore"))
     return suiteSelect
 
 
-def suiteChemCompIndex():
+def suiteChemCompIndex():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompGetDictionaryIndex"))
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompFetchStatus"))
@@ -536,20 +543,20 @@ def suiteChemCompIndex():
     return suiteSelect
 
 
-def suiteChemCompSearchIndex():
+def suiteChemCompSearchIndex():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompSearchIndex"))
     return suiteSelect
 
 
-def suiteChemCompUpdate():
+def suiteChemCompUpdate():  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompUpdateStoreByObject"))
     suiteSelect.addTest(PdbxChemCompPersistTests("testChemCompUpdateStoreByContainer"))
     return suiteSelect
 
 
-if __name__ == "__main__":
+if __name__ == "__main__":  # pragma: no cover
     # Run all tests --
     # unittest.main()
     #
