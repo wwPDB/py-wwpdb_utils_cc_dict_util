@@ -58,9 +58,9 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         pass
 
     def getPathList(self, topPath, pattern="*", excludeDirs=None, recurse=True):
-        """ Return a list of file paths in the input topPath which satisfy the input search criteria.
+        """Return a list of file paths in the input topPath which satisfy the input search criteria.
 
-            This version does not follow symbolic links.
+        This version does not follow symbolic links.
         """
         if excludeDirs is None:
             excludeDirs = []
@@ -91,8 +91,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         return pathList
 
     def testCreateStoreDict(self):
-        """Test case -  read full chemical component dictionary and  create persistent store.
-        """
+        """Test case -  read full chemical component dictionary and  create persistent store."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -111,7 +110,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def testCreateStorePathList(self):
         """Test case -  create persistent store from a path list of chemical component defintions.
 
-                        Extract the path list from the distributed path list file.
+        Extract the path list from the distributed path list file.
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
@@ -136,7 +135,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def testCreateStorePathListFS(self):
         """Test case -  create persistent store from a path list of chemical component defintions.
 
-                        Extract the path list by searching the file system.
+        Extract the path list by searching the file system.
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
@@ -159,7 +158,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def testUpdateStorePathList(self):
         """Test case -  update persistent store from a path list of chemical component defintions.
 
-                        Extract the path list from the distributed path list file.
+        Extract the path list from the distributed path list file.
         """
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))

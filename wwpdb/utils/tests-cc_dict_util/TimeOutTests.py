@@ -36,8 +36,7 @@ class TimeOutTests(unittest.TestCase):
 
     # pylint: disable=protected-access
     def testTimeOut1(self):
-        """Test case -
-        """
+        """Test case -"""
         self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
         try:
             self.longrunner(20)
@@ -52,8 +51,7 @@ class TimeOutTests(unittest.TestCase):
 
     # pylint: disable=protected-access
     def testNoTimeOut1(self):
-        """Test case - sleep completes without timeout
-        """
+        """Test case - sleep completes without timeout"""
         self.__lfh.write("\nStarting %s %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name))
         try:
             # Shorter than expected timeout

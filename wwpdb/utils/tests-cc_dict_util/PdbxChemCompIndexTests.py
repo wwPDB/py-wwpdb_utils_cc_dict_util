@@ -51,8 +51,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         pass
 
     def testCreateIndex(self):
-        """Test case -  create search index from persistent store
-        """
+        """Test case -  create search index from persistent store"""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -69,8 +68,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         )
 
     def testCreateParentIndex(self):
-        """Test case -  create search index for parent residues from persistent store
-        """
+        """Test case -  create search index for parent residues from persistent store"""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -93,9 +91,7 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         )
 
     def testReadIndex(self):
-        """Test case -  read search index
-
-        """
+        """Test case -  read search index"""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:

@@ -36,8 +36,7 @@ from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import PdbxChemCompIt,
 
 
 class PdbxChemCompDictIndex(object):
-    """ Builds simplified indices of the serialized content in the chemical component dictionary.
-    """
+    """Builds simplified indices of the serialized content in the chemical component dictionary."""
 
     def __init__(self, verbose=True, log=sys.stderr):
         self.__verbose = verbose
@@ -45,32 +44,30 @@ class PdbxChemCompDictIndex(object):
         self.__lfh = log
 
     def makeIndex(self, storePath="chemcomp.db", indexPath="chemcomp-index.pic"):
-        """ Create a search index from the contents of a persistent store of
-            a chemical dictionary.  Store the index in indexPath.
+        """Create a search index from the contents of a persistent store of
+        a chemical dictionary.  Store the index in indexPath.
         """
         return self.__makeIndex(storePath=storePath, indexPath=indexPath)
 
     def makeParentComponentIndex(self, storePath="chemcomp.db", indexPath="chemcomp-parent-index.pic"):
-        """ Create a search index for parent components from the contents of a persistent store of
-            a chemical dictionary.  Store the index in indexPath.
+        """Create a search index for parent components from the contents of a persistent store of
+        a chemical dictionary.  Store the index in indexPath.
         """
         return self.__makeParentIndex(storePath=storePath, indexPath=indexPath)
 
     def readIndex(self, indexPath="chemcomp-index.pic"):
-        """ Read and return search index.
-        """
+        """Read and return search index."""
         return self.__readIndex(indexPath=indexPath)
 
     def readParentComponentIndex(self, indexPath="chemcomp-parent-index.pic"):
-        """ Read and return the parent component search index.
-        """
+        """Read and return the parent component search index."""
         return self.__readParentIndex(indexPath=indexPath)
 
     def __makeIndex(self, storePath, indexPath):
         """Read serialized component dictionary and build a search index.
 
-           Index is a dictionary of selected items such as name, synonyns, formula, status and
-           descriptors.  Index is stored as a pickled dictionary.
+        Index is a dictionary of selected items such as name, synonyns, formula, status and
+        descriptors.  Index is stored as a pickled dictionary.
         """
         ccIdx = {}
         try:
@@ -186,7 +183,7 @@ class PdbxChemCompDictIndex(object):
     def __makeParentIndex(self, storePath, indexPath):
         """Read serialized component dictionary and indices of parent/child relationships for modified residues.
 
-           Index is stored as a pickled dictionary in indexPath.
+        Index is stored as a pickled dictionary in indexPath.
         """
         pD = {}
         cD = {}
@@ -237,8 +234,7 @@ class PdbxChemCompDictIndex(object):
         return pD, cD
 
     def __readParentIndex(self, indexPath):
-        """ Internal method to recover the pickled index file.
-        """
+        """Internal method to recover the pickled index file."""
         pD = {}
         cD = {}
         try:
@@ -252,8 +248,7 @@ class PdbxChemCompDictIndex(object):
         return pD, cD
 
     def __readIndex(self, indexPath):
-        """ Internal method to recover the pickled index file.
-        """
+        """Internal method to recover the pickled index file."""
         try:
             with open(indexPath, "rb") as fin:
                 return pickle.load(fin)

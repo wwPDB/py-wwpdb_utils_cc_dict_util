@@ -75,8 +75,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         pass
 
     def testChemCompReadDictionary(self):
-        """Test case -  read chemical component dictionary.
-        """
+        """Test case -  read chemical component dictionary."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -94,8 +93,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompCreateStore(self):
-        """Test case -  read chemical component dictionary and  create persistent store.
-        """
+        """Test case -  read chemical component dictionary and  create persistent store."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
@@ -119,8 +117,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompUpdateStoreByObject(self):
-        """Test case -  update persistent store with replacement data by object.
-        """
+        """Test case -  update persistent store with replacement data by object."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
 
@@ -154,8 +151,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompUpdateStoreByContainer(self):
-        """Test case -  update persistent store with replacement data by container.
-        """
+        """Test case -  update persistent store with replacement data by container."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
 
@@ -184,8 +180,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompGetDictionaryIndex(self):
-        """Test case - recover index from persistent store
-        """
+        """Test case - recover index from persistent store"""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
@@ -205,8 +200,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompFetchStatus(self):
-        """Test case -  read component dictionary index and fetch release status value from each chem_comp category
-        """
+        """Test case -  read component dictionary index and fetch release status value from each chem_comp category"""
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
@@ -239,9 +233,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def __cnvChemCompFormulaToElementCounts(self, fS):
-        """ Convert formula format from chemical component definition to an element count dictionary.
-
-        """
+        """Convert formula format from chemical component definition to an element count dictionary."""
         eD = {}
         fL = fS.split()
         for f in fL:
@@ -259,8 +251,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         return eD
 
     def testChemCompInterpretFormula(self):
-        """Test case -  read component dictionary index and fetch release status value from each chem_comp category
-        """
+        """Test case -  read component dictionary index and fetch release status value from each chem_comp category"""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
@@ -289,8 +280,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompFetchAtoms(self):
-        """Test case -  read component dictionary index and fetch all chem_comp categories
-        """
+        """Test case -  read component dictionary index and fetch all chem_comp categories"""
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
@@ -335,8 +325,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompCompareDescriptors(self):
-        """Test case -  read component dictionary index and compare all descriptors.
-        """
+        """Test case -  read component dictionary index and compare all descriptors."""
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
@@ -374,8 +363,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompMakeSearchIndex(self):
-        """Test case -  read component dictionary index and build a search index.
-        """
+        """Test case -  read component dictionary index and build a search index."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
@@ -476,8 +464,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         )
 
     def testChemCompSearchIndex(self):
-        """Test case -  read component index and test formula filters.
-        """
+        """Test case -  read component index and test formula filters."""
         startTime = time.time()
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:

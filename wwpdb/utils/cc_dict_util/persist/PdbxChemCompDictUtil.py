@@ -25,8 +25,7 @@ from mmcif_utils.persist.PdbxCoreIoAdapter import PdbxCoreIoAdapter as PdbxIoAda
 
 
 class PdbxChemCompDictUtil(object):
-    """ Maintenance methods for creating and updating persistent stores of chemical dictionaries.
-    """
+    """Maintenance methods for creating and updating persistent stores of chemical dictionaries."""
 
     def __init__(self, verbose=True, log=sys.stderr):
         self.__verbose = verbose
@@ -34,28 +33,23 @@ class PdbxChemCompDictUtil(object):
         self.__lfh = log
 
     def makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
-        """ Create a new persistent store from input chemical dictionary file.
-        """
+        """Create a new persistent store from input chemical dictionary file."""
         return self.__makeStoreFromFile(dictPath=dictPath, storePath=storePath, minSize=minSize)
 
     def makeStoreFromPathList(self, pathList, storePath="chemcomp.db"):
-        """ Create a new persistent store from a path list of chemical component definitions.
-        """
+        """Create a new persistent store from a path list of chemical component definitions."""
         return self.__makeStoreFromPathList(pathList=pathList, storePath=storePath)
 
     def updateStoreByFile(self, pathList, storePath="chemcomp.db"):
-        """ Update the persistant store with the contents of the input path list
-        """
+        """Update the persistant store with the contents of the input path list"""
         return self.__updateStoreByFile(pathList, storePath=storePath)
 
     def updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
-        """ Update the persistant store with the contents of the input object in the input named container.
-        """
+        """Update the persistant store with the contents of the input object in the input named container."""
         return self.__updateStoreByObject(inpObject, containerName=containerName, containerType=containerType, storePath=storePath)
 
     def updateStoreByContainer(self, containerList, storePath="chemcomp.db"):
-        """Update the persistant store with the contents of the input container list.
-        """
+        """Update the persistant store with the contents of the input container list."""
         return self.__updateStoreByContainer(containerList=containerList, storePath=storePath)
 
     ##
@@ -68,8 +62,7 @@ class PdbxChemCompDictUtil(object):
             return 0
 
     def __makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
-        """ Internal method to create a new persistent store from input chemical dictionary file.
-        """
+        """Internal method to create a new persistent store from input chemical dictionary file."""
         try:
             ok = False
             tmpPath = storePath + "-tmpstore"
@@ -94,8 +87,8 @@ class PdbxChemCompDictUtil(object):
             return False
 
     def __makeStoreFromPathList(self, pathList, storePath="chemcomp.db", minSize=10):
-        """ Internal method to create a new persistent store from a path list
-            of chemical component definitions.
+        """Internal method to create a new persistent store from a path list
+        of chemical component definitions.
         """
         try:
             ok = False
@@ -127,8 +120,8 @@ class PdbxChemCompDictUtil(object):
             return False
 
     def __updateStoreByFile(self, pathList, storePath="chemcomp.db"):
-        """ Internal method to update the persistant store with the contents of the input list of
-            chemical component definition files.
+        """Internal method to update the persistant store with the contents of the input list of
+        chemical component definition files.
         """
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
@@ -145,8 +138,7 @@ class PdbxChemCompDictUtil(object):
             return False
 
     def __updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
-        """ Internal method to update the persistant store with the contents of the input object in the input named container.
-        """
+        """Internal method to update the persistant store with the contents of the input object in the input named container."""
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateOneObject(inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType)
@@ -156,8 +148,7 @@ class PdbxChemCompDictUtil(object):
             return False
 
     def __updateStoreByContainer(self, containerList, storePath="chemcomp.db"):
-        """Internal method to update the persistant store with the contents of the input container list.
-        """
+        """Internal method to update the persistant store with the contents of the input container list."""
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateContainerList(dbFileName=storePath, containerList=containerList)
