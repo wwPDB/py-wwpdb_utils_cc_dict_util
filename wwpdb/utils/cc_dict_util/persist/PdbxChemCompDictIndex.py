@@ -170,7 +170,8 @@ class PdbxChemCompDictIndex(object):
 
             myPersist.close()
             with open(indexPath, "wb") as fout:
-                pickle.dump(ccIdx, fout, pickle.HIGHEST_PROTOCOL)
+                # Maintain backwards compatibility with python 2
+                pickle.dump(ccIdx, fout, 2)
 
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__verbose:
@@ -221,8 +222,9 @@ class PdbxChemCompDictIndex(object):
             myPersist.close()
             #
             ofh = open(indexPath, "wb")
-            pickle.dump(pD, ofh, pickle.HIGHEST_PROTOCOL)
-            pickle.dump(cD, ofh, pickle.HIGHEST_PROTOCOL)
+            # Compatbility with python 2 and not pickle.HIGHEST_PROTOCOL
+            pickle.dump(pD, ofh, 2)
+            pickle.dump(cD, ofh, 2)
             ofh.close()
 
         except:  # noqa: E722 pylint: disable=bare-except
