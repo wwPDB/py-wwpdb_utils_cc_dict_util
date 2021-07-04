@@ -28,10 +28,7 @@ from wwpdb.utils.cc_dict_util.persist.PdbxChemCompConstants import PdbxChemCompC
 class PdbxCategoryItBase(object):
     """Base category iterator class."""
 
-    def __init__(self, dataCategory, func, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, dataCategory, func, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rL = dataCategory.getRowList()
         self.__func = func
 
@@ -99,10 +96,7 @@ class PdbxChemCompAuditIt(PdbxCategoryItBase):
 class PdbxChemCompPersist(object):
     """Accessor methods chemical component attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -187,11 +181,8 @@ class PdbxChemCompPersist(object):
 class PdbxChemCompAtomPersist(PdbxChemCompConstants):
     """Accessor methods chemical component atom attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         super(PdbxChemCompAtomPersist, self).__init__()
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -292,10 +283,7 @@ class PdbxChemCompAtomPersist(PdbxChemCompConstants):
 class PdbxChemCompBondPersist(object):
     """Accessor methods chemical component bond attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -346,10 +334,7 @@ class PdbxChemCompBondPersist(object):
 class PdbxChemCompIdentifierPersist(object):
     """Accessor methods chemical component identifier attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -384,10 +369,7 @@ class PdbxChemCompIdentifierPersist(object):
 class PdbxChemCompDescriptorPersist(object):
     """Accessor methods chemical component descriptor  attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -422,10 +404,7 @@ class PdbxChemCompDescriptorPersist(object):
 class PdbxChemCompAuditPersist(object):
     """Accessor methods chemical component audit details."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):
-        self.__verbose = verbose
-        self.__debug = False
-        self.__lfh = log
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 

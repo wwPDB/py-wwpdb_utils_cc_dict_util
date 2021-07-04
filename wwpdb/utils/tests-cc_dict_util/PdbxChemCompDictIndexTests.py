@@ -36,7 +36,6 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
     def setUp(self):
         self.__lfh = sys.stdout
         self.__verbose = True
-        self.__debug = False
         #
         # Should exist from a previous test case --
         here = os.path.abspath(os.path.dirname(__file__))

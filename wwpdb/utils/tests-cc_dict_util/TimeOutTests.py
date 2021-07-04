@@ -23,7 +23,6 @@ from wwpdb.utils.cc_dict_util.timeout.TimeoutMultiProc import timeout, TimeoutEx
 class TimeOutTests(unittest.TestCase):
     def setUp(self):
         self.__lfh = sys.stderr
-        self.__verbose = True
 
     def tearDown(self):
         pass

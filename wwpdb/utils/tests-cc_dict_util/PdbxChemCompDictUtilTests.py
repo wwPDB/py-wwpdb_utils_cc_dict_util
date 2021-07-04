@@ -37,7 +37,6 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
     def setUp(self):
         self.__lfh = sys.stdout
         self.__verbose = True
-        self.__debug = False
 
         self.__siteId = getSiteId(defaultSiteId="WWPDB_DEPLOY_TEST_RU")
         self.__lfh.write("\nTesting with site environment for:  %s\n" % self.__siteId)
@@ -52,7 +51,6 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
 
         self.__persistStorePathA = "chemcompA.db"
         self.__persistStorePathB = "chemcompB.db"
-        self.__persistStorePathC = "chemcompC.db"
 
     def tearDown(self):
         pass
