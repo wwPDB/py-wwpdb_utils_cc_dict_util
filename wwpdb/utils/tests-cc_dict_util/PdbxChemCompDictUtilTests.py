@@ -27,6 +27,9 @@ import time
 import os
 import os.path
 
+if sys.version_info[0] < 3:
+    from io import open as open
+
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictUtil import PdbxChemCompDictUtil
 from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
 
@@ -114,7 +117,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
         try:
             ccPathList = []
-            ifh = open(self.__pathList, "r")
+            ifh = open(self.__pathList, "r", encoding="utf-8")
             for line in ifh:
                 ccPathList.append(line[:-1])
             ifh.close()

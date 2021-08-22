@@ -28,6 +28,9 @@ import platform
 import string
 import glob
 
+if sys.version_info[0] < 3:
+    from io import open as open
+
 try:
     import cPickle as pickle
 except ImportError:
@@ -60,16 +63,22 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         entlist = glob.glob(source + "/*.cif")
 
         # Pathlist creation
-        with open(pathlist, "w") as fout:
+        with open(pathlist, "w", encoding="utf-8") as fout:
             for ent in entlist:
-                fout.write(ent + "\n")
+                if sys.version_info[0] < 3:
+                    fout.write((ent + "\n").decode("utf-8"))
+                else:
+                    fout.write(ent + "\n")
 
         # Combined file
-        with open(combined, "w") as fout:
+        with open(combined, "w", encoding="utf-8") as fout:
             for ent in entlist:
-                with open(ent, "r") as fin:
+                with open(ent, "r", encoding="utf-8") as fin:
                     fout.write(fin.read())
-                fout.write("\n")
+                if sys.version_info[0] < 3:
+                    fout.write(("\n").decode("utf-8"))
+                else:
+                    fout.write("\n")
 
     def tearDown(self):
         pass
@@ -126,7 +135,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.testChemCompCreateStore()
         try:
             replacePathList = []
-            ifh = open(self.__pathList, "r")
+            ifh = open(self.__pathList, "r", encoding="utf-8")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
@@ -159,7 +168,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             self.testChemCompCreateStore()
         try:
             replacePathList = []
-            ifh = open(self.__pathList, "r")
+            ifh = open(self.__pathList, "r", encoding="utf-8")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
