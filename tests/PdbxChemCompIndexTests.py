@@ -14,19 +14,21 @@ Test cases for PdbxChemCompIndex demonstrating creation and reading
 search indices for chemical component dictionary data.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import unittest
-import traceback
-import sys
-import time
+import inspect
 import os
 import os.path
 import platform
+import sys
+import time
+import traceback
+import unittest
 
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictIndex import PdbxChemCompDictIndex
 
@@ -52,7 +54,14 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
     def testCreateIndex(self):
         """Test case -  create search index from persistent store"""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.makeIndex(storePath=self.__persistStorePath, indexPath=self.__indexPath)
@@ -63,19 +72,30 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testCreateParentIndex(self):
         """Test case -  create search index for parent residues from persistent store"""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             pD, cD = dIndx.makeParentComponentIndex(storePath=self.__persistStorePath, indexPath=self.__parentIndexPath)
             self.__lfh.write("+testCreateParentIndex() parent dictionary %r\n" % pD.items())
             self.__lfh.write("+testCreateParentIndex() child dictionary %r\n" % cD.items())
-            #
             d1, d2 = dIndx.readParentComponentIndex(indexPath=self.__parentIndexPath)
             self.__lfh.write("+testCreateParentIndex() recovered parent dictionary %r\n" % d1.items())
             self.__lfh.write("+testCreateParentIndex() recovered child dictionary %r\n" % d2.items())
@@ -86,13 +106,25 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testReadIndex(self):
         """Test case -  read search index"""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             dIndx = PdbxChemCompDictIndex(verbose=self.__verbose, log=self.__lfh)
             dIndx.readIndex(indexPath=self.__indexPath)
@@ -103,7 +135,12 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
 
@@ -121,10 +158,8 @@ def suiteChemCompBuildParentIndex():  # pragma: no cover
 
 
 if __name__ == "__main__":  # pragma: no cover
-    #
     mySuite2 = suiteChemCompBuildIndex()
     unittest.TextTestRunner(verbosity=2).run(mySuite2)
 
     mySuite1 = suiteChemCompBuildParentIndex()
     unittest.TextTestRunner(verbosity=2).run(mySuite1)
-    #

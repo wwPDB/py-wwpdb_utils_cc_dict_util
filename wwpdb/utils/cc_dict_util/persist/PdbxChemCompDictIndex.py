@@ -17,6 +17,7 @@ A collection of classes for building simplified indices of the
 serialized content in the chemical component dictionary.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -27,15 +28,21 @@ import sys
 import traceback
 
 try:
-    import cPickle as pickle
+    import cPickle as pickle  # noqa: S301,N813,S403
 except ImportError:
-    import pickle
+    import pickle  # noqa: S301,S403
 
 from mmcif_utils.persist.PdbxPersist import PdbxPersist
-from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import PdbxChemCompIt, PdbxChemCompAtomIt, PdbxChemCompDescriptorIt, PdbxChemCompIdentifierIt
+
+from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import (
+    PdbxChemCompAtomIt,
+    PdbxChemCompDescriptorIt,
+    PdbxChemCompIdentifierIt,
+    PdbxChemCompIt,
+)
 
 
-class PdbxChemCompDictIndex(object):
+class PdbxChemCompDictIndex:
     """Builds simplified indices of the serialized content in the chemical component dictionary."""
 
     def __init__(self, verbose=True, log=sys.stderr):
@@ -74,9 +81,7 @@ class PdbxChemCompDictIndex(object):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.open(dbFileName=storePath)
             containerList = myPersist.getStoreContainerIndex()
-            #
             for ccId in containerList:
-                #
                 d = {}
                 d["ccId"] = ccId
                 d["nameList"] = []
@@ -89,12 +94,10 @@ class PdbxChemCompDictIndex(object):
                 d["smilesStereo"] = None
                 d["releaseStatus"] = None
                 d["subcomponentList"] = None
-                #
                 d["name"] = None
                 d["type"] = None
                 d["formula"] = None
                 d["formulaWeight"] = None
-                #
                 nameList = []
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
@@ -132,7 +135,6 @@ class PdbxChemCompDictIndex(object):
                             typeCounts[aType] += 1
                     d["typeCounts"] = typeCounts
 
-                #
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is not None:
                     rowIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
@@ -153,7 +155,6 @@ class PdbxChemCompDictIndex(object):
                             elif desType == "InChIKey":
                                 d["InChIKey"] = des
                                 d["InChIKey14"] = des[:14]
-                #
 
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_identifier")
                 if dC is not None:
@@ -175,7 +176,10 @@ class PdbxChemCompDictIndex(object):
 
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__verbose:
-                self.__lfh.write("PdbxChemCompDictIndex(__makeIndex) index creation failed for %s index %s\n" % (storePath, indexPath))
+                self.__lfh.write(
+                    "PdbxChemCompDictIndex(__makeIndex) index creation failed for %s index %s\n"
+                    % (storePath, indexPath)
+                )
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
@@ -192,35 +196,31 @@ class PdbxChemCompDictIndex(object):
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.open(dbFileName=storePath)
             containerList = myPersist.getStoreContainerIndex()
-            #
 
             for ccId in containerList:
-                #
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
                     rowIt = PdbxChemCompIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
                         pCompId = row.getNstdParentId()
                         compId = row.getId()
-                        #
                         if (pCompId is not None) and (len(pCompId) > 0) and (pCompId not in ["?", "."]):
-
                             if "," in pCompId:
                                 pList = pCompId.split(",")
                                 cD[compId] = pList
+                            elif len(pCompId) > 3:
+                                self.__lfh.write(
+                                    "PdbxChemCompDictIndex(__makeParentIndex) compId %s parent compId %s\n"
+                                    % (compId, pCompId)
+                                )
                             else:
-                                if len(pCompId) > 3:
-                                    self.__lfh.write("PdbxChemCompDictIndex(__makeParentIndex) compId %s parent compId %s\n" % (compId, pCompId))
-                                else:
-                                    pList = [pCompId]
-                                    if pCompId not in pD:
-                                        pD[pCompId] = []
-                                    pD[pCompId].append(compId)
-                                    #
-                                    cD[compId] = pList
+                                pList = [pCompId]
+                                if pCompId not in pD:
+                                    pD[pCompId] = []
+                                pD[pCompId].append(compId)
+                                cD[compId] = pList
 
             myPersist.close()
-            #
             ofh = open(indexPath, "wb")
             # Compatbility with python 2 and not pickle.HIGHEST_PROTOCOL
             pickle.dump(pD, ofh, 2)
@@ -229,30 +229,35 @@ class PdbxChemCompDictIndex(object):
 
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__verbose:
-                self.__lfh.write("PdbxChemCompDictIndex(__makeParentIndex) parent index creation failed for %s index %s\n" % (storePath, indexPath))
+                self.__lfh.write(
+                    "PdbxChemCompDictIndex(__makeParentIndex) parent index creation failed for %s index %s\n"
+                    % (storePath, indexPath)
+                )
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
 
         return pD, cD
 
-    def __readParentIndex(self, indexPath):
+    @staticmethod
+    def __readParentIndex(indexPath):
         """Internal method to recover the pickled index file."""
         pD = {}
         cD = {}
         try:
             ifh = open(indexPath, "rb")
-            pD = pickle.load(ifh)
-            cD = pickle.load(ifh)
+            pD = pickle.load(ifh)  # noqa: S301
+            cD = pickle.load(ifh)  # noqa: S301
             ifh.close()
             return pD, cD
         except:  # noqa: E722 pylint: disable=bare-except
             pass
         return pD, cD
 
-    def __readIndex(self, indexPath):
+    @staticmethod
+    def __readIndex(indexPath):
         """Internal method to recover the pickled index file."""
         try:
             with open(indexPath, "rb") as fin:
-                return pickle.load(fin)
+                return pickle.load(fin)  # noqa: S301
         except:  # noqa: E722 pylint: disable=bare-except
             return {}

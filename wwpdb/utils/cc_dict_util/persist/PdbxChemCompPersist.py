@@ -12,6 +12,7 @@ A collection of access and iterator classes supporting chemical component dictio
 extracted from persistent store.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
@@ -21,14 +22,13 @@ __version__ = "V0.01"
 import sys
 
 # import traceback
-
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompConstants import PdbxChemCompConstants
 
 
-class PdbxCategoryItBase(object):
+class PdbxCategoryItBase:
     """Base category iterator class."""
 
-    def __init__(self, dataCategory, func, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, dataCategory, func, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rL = dataCategory.getRowList()
         self.__func = func
 
@@ -77,13 +77,17 @@ class PdbxChemCompBondIt(PdbxCategoryItBase):
 
 class PdbxChemCompDescriptorIt(PdbxCategoryItBase):
     def __init__(self, dataCategory, verbose=True, log=sys.stderr):
-        o = PdbxChemCompDescriptorPersist([], attributeNameList=dataCategory.getAttributeList(), verbose=verbose, log=log)
+        o = PdbxChemCompDescriptorPersist(
+            [], attributeNameList=dataCategory.getAttributeList(), verbose=verbose, log=log
+        )
         super(PdbxChemCompDescriptorIt, self).__init__(dataCategory, o.set, verbose, log)
 
 
 class PdbxChemCompIdentifierIt(PdbxCategoryItBase):
     def __init__(self, dataCategory, verbose=True, log=sys.stderr):
-        o = PdbxChemCompIdentifierPersist([], attributeNameList=dataCategory.getAttributeList(), verbose=verbose, log=log)
+        o = PdbxChemCompIdentifierPersist(
+            [], attributeNameList=dataCategory.getAttributeList(), verbose=verbose, log=log
+        )
         super(PdbxChemCompIdentifierIt, self).__init__(dataCategory, o.set, verbose, log)
 
 
@@ -93,10 +97,10 @@ class PdbxChemCompAuditIt(PdbxCategoryItBase):
         super(PdbxChemCompAuditIt, self).__init__(dataCategory, o.set, verbose, log)
 
 
-class PdbxChemCompPersist(object):
+class PdbxChemCompPersist:
     """Accessor methods chemical component attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -181,7 +185,7 @@ class PdbxChemCompPersist(object):
 class PdbxChemCompAtomPersist(PdbxChemCompConstants):
     """Accessor methods chemical component atom attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         super(PdbxChemCompAtomPersist, self).__init__()
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
@@ -212,7 +216,7 @@ class PdbxChemCompAtomPersist(PdbxChemCompConstants):
     def getAtNo(self):
         try:
             tyU = str(self.getType()).upper()
-            if (tyU == "D") or (tyU == "T"):
+            if (tyU == "D") or (tyU == "T"):  # noqa: PLR1714
                 tyU = "H"
             return self._periodicTable.index(tyU) + 1
         except:  # noqa: E722 pylint: disable=bare-except
@@ -223,10 +227,9 @@ class PdbxChemCompAtomPersist(PdbxChemCompConstants):
         ty = self.getType()
         if ty == "D":
             return 2
-        elif ty == "T":
+        if ty == "T":
             return 3
-        else:
-            return 0
+        return 0
 
     def isAromatic(self):
         return self.__getAttribute("pdbx_aromatic_flag") != "N"
@@ -280,10 +283,10 @@ class PdbxChemCompAtomPersist(PdbxChemCompConstants):
         ofh.write("PdbxChemCompAtomPersist(dump) %r\n" % self.__rowData)
 
 
-class PdbxChemCompBondPersist(object):
+class PdbxChemCompBondPersist:
     """Accessor methods chemical component bond attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -309,14 +312,13 @@ class PdbxChemCompBondPersist(object):
         bT = self.__getAttribute("value_order")
         if bT == "SING":
             return 1
-        elif bT == "DOUB":
+        if bT == "DOUB":
             return 2
-        elif bT == "TRIP":
+        if bT == "TRIP":
             return 3
-        elif bT == "QUAD":
+        if bT == "QUAD":
             return 4
-        else:
-            return 0
+        return 0
 
     def isAromatic(self):
         return self.__getAttribute("pdbx_aromatic_flag") == "Y"
@@ -331,10 +333,10 @@ class PdbxChemCompBondPersist(object):
         ofh.write("PdbxChemCompBondPersist(dump) %r\n" % self.__rowData)
 
 
-class PdbxChemCompIdentifierPersist(object):
+class PdbxChemCompIdentifierPersist:
     """Accessor methods chemical component identifier attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -366,10 +368,10 @@ class PdbxChemCompIdentifierPersist(object):
         ofh.write("PdbxChemCompIdentifierPersist(dump) %r\n" % self.__rowData)
 
 
-class PdbxChemCompDescriptorPersist(object):
+class PdbxChemCompDescriptorPersist:
     """Accessor methods chemical component descriptor  attributes."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 
@@ -401,10 +403,10 @@ class PdbxChemCompDescriptorPersist(object):
         ofh.write("PdbxChemCompDescriptorPersist(dump) %r\n" % self.__rowData)
 
 
-class PdbxChemCompAuditPersist(object):
+class PdbxChemCompAuditPersist:
     """Accessor methods chemical component audit details."""
 
-    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # pylint: disable=unused-argument
+    def __init__(self, rowData, attributeNameList, verbose=True, log=sys.stderr):  # noqa: ARG002 pylint: disable=unused-argument
         self.__rowData = rowData
         self.__attributeNameList = attributeNameList
 

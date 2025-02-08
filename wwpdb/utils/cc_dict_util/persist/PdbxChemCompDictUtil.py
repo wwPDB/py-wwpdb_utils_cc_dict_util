@@ -10,21 +10,22 @@ A collection of classes supporting maintenance methods on chemical
 dictionaries and  persistent stores.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
 import os
+import sys
 import traceback
 
-from mmcif_utils.persist.PdbxPersist import PdbxPersist
 from mmcif_utils.persist.PdbxCoreIoAdapter import PdbxCoreIoAdapter as PdbxIoAdapter
+from mmcif_utils.persist.PdbxPersist import PdbxPersist
 
 
-class PdbxChemCompDictUtil(object):
+class PdbxChemCompDictUtil:
     """Maintenance methods for creating and updating persistent stores of chemical dictionaries."""
 
     def __init__(self, verbose=True, log=sys.stderr):
@@ -46,7 +47,9 @@ class PdbxChemCompDictUtil(object):
 
     def updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
         """Update the persistant store with the contents of the input object in the input named container."""
-        return self.__updateStoreByObject(inpObject, containerName=containerName, containerType=containerType, storePath=storePath)
+        return self.__updateStoreByObject(
+            inpObject, containerName=containerName, containerType=containerType, storePath=storePath
+        )
 
     def updateStoreByContainer(self, containerList, storePath="chemcomp.db"):
         """Update the persistant store with the contents of the input container list."""
@@ -54,7 +57,8 @@ class PdbxChemCompDictUtil(object):
 
     ##
 
-    def __getFileSize(self, fPath):
+    @staticmethod
+    def __getFileSize(fPath):
         try:
             st = os.stat(fPath)
             return st.st_size
@@ -130,7 +134,6 @@ class PdbxChemCompDictUtil(object):
 
                 myPersist = PdbxPersist(self.__verbose, self.__lfh)
                 myPersist.updateContainerList(dbFileName=storePath, containerList=myReader.getContainerList())
-            #
             return True
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__debug:
@@ -141,7 +144,9 @@ class PdbxChemCompDictUtil(object):
         """Internal method to update the persistant store with the contents of the input object in the input named container."""
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
-            myPersist.updateOneObject(inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType)
+            myPersist.updateOneObject(
+                inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType
+            )
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)

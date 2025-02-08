@@ -9,15 +9,18 @@
 A definitions of data categories used in the chemical component dictionary.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+from typing import ClassVar
 
-class PdbxChemCompCategoryDefinitions(object):
-    _categoryInfo = [
+
+class PdbxChemCompCategoryDefinitions:
+    _categoryInfo: ClassVar = [  # noqa: N815
         ("chem_comp", "key-value"),
         ("chem_comp_atom", "table"),
         ("chem_comp_bond", "table"),
@@ -28,7 +31,7 @@ class PdbxChemCompCategoryDefinitions(object):
         ("pdbx_chem_comp_atom_edit", "table"),
         ("pdbx_chem_comp_bond_edit", "table"),
     ]
-    _cDict = {
+    _cDict: ClassVar = {  # noqa: N815
         "chem_comp": [
             ("_chem_comp.id", "%s", "str", ""),
             ("_chem_comp.name", "%s", "str", ""),
