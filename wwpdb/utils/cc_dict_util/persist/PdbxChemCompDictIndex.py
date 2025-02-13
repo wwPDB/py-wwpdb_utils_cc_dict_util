@@ -28,7 +28,7 @@ import sys
 import traceback
 
 try:
-    import cPickle as pickle  # noqa: S301,N813,S403
+    import cPickle as pickle  # type: ignore[import-not-found]  # noqa: S301,N813,S403
 except ImportError:
     import pickle  # noqa: S301,S403
 

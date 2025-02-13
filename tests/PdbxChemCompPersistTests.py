@@ -34,7 +34,7 @@ import unittest
 #    from io import open as open
 
 try:
-    import cPickle as pickle  # noqa: N813
+    import cPickle as pickle   # type: ignore[import-not-found]  # noqa: N813
 except ImportError:
     import pickle
 
