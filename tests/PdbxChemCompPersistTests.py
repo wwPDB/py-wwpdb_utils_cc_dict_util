@@ -12,33 +12,43 @@ data,  derivative indexing created from the persistent store, and search example
 the derivative indices.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import sys
-import unittest
-import traceback
-import time
+import glob
+import inspect
 import os
 import os.path
 import platform
 import string
-import glob
+import sys
+import time
+import traceback
+import unittest
 
-if sys.version_info[0] < 3:
-    from io import open as open
+# if sys.version_info[0] < 3:
+#    from io import open as open
 
 try:
-    import cPickle as pickle
+    import cPickle as pickle   # type: ignore[import-not-found]  # noqa: N813
 except ImportError:
     import pickle
 
-from mmcif_utils.persist.PdbxPersist import PdbxPersist
+import builtins
+
 from mmcif.io.IoAdapterCore import IoAdapterCore as PdbxIoAdapter
-from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import PdbxChemCompIt, PdbxChemCompAtomIt, PdbxChemCompDescriptorIt, PdbxChemCompIdentifierIt
+from mmcif_utils.persist.PdbxPersist import PdbxPersist
+
+from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import (
+    PdbxChemCompAtomIt,
+    PdbxChemCompDescriptorIt,
+    PdbxChemCompIdentifierIt,
+    PdbxChemCompIt,
+)
 
 
 # pylint: disable=protected-access
@@ -63,7 +73,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         entlist = glob.glob(source + "/*.cif")
 
         # Pathlist creation
-        with open(pathlist, "w", encoding="utf-8") as fout:
+        with builtins.open(pathlist, "w", encoding="utf-8") as fout:
             for ent in entlist:
                 if sys.version_info[0] < 3:
                     fout.write((ent + "\n").decode("utf-8"))
@@ -71,9 +81,9 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                     fout.write(ent + "\n")
 
         # Combined file
-        with open(combined, "w", encoding="utf-8") as fout:
+        with builtins.open(combined, "w", encoding="utf-8") as fout:
             for ent in entlist:
-                with open(ent, "r", encoding="utf-8") as fin:
+                with builtins.open(ent, encoding="utf-8") as fin:
                     fout.write(fin.read())
                 if sys.version_info[0] < 3:
                     fout.write(("\n").decode("utf-8"))
@@ -86,7 +96,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompReadDictionary(self):
         """Test case -  read chemical component dictionary."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(inputFilePath=self.__pathChemCompDictFile)
@@ -98,17 +115,28 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompCreateStore(self):
         """Test case -  read chemical component dictionary and  create persistent store."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
             cList = myReader.readFile(inputFilePath=self.__pathChemCompDictFile)
-            #
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.setContainerList(cList)
             myPersist.store(dbFileName=self.__persistStorePath)
@@ -122,24 +150,34 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompUpdateStoreByObject(self):
         """Test case -  update persistent store with replacement data by object."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
 
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
-
             self.testChemCompCreateStore()
         try:
             replacePathList = []
-            ifh = open(self.__pathList, "r", encoding="utf-8")
+            ifh = builtins.open(self.__pathList, encoding="utf-8")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
-            #
             for rPath in replacePathList[:10]:
                 myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
                 cList = myReader.readFile(inputFilePath=rPath)
@@ -148,7 +186,9 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                     for objName in container.getObjNameList():
                         myObj = container.getObj(objName)
                         myPersist = PdbxPersist(self.__verbose, self.__lfh)
-                        myPersist.updateOneObject(myObj, dbFileName=self.__persistStorePath, containerName=containerName)
+                        myPersist.updateOneObject(
+                            myObj, dbFileName=self.__persistStorePath, containerName=containerName
+                        )
         except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
             traceback.print_exc(file=self.__lfh)
             self.fail()
@@ -156,23 +196,34 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompUpdateStoreByContainer(self):
         """Test case -  update persistent store with replacement data by container."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
 
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
             replacePathList = []
-            ifh = open(self.__pathList, "r", encoding="utf-8")
+            ifh = builtins.open(self.__pathList, encoding="utf-8")
             for line in ifh:
                 replacePathList.append(line[:-1])
             ifh.close()
-            #
             for rPath in replacePathList[:10]:
                 myReader = PdbxIoAdapter(self.__verbose, self.__lfh)
                 cList = myReader.readFile(inputFilePath=rPath)
@@ -185,13 +236,25 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompGetDictionaryIndex(self):
         """Test case - recover index from persistent store"""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
@@ -205,7 +268,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompFetchStatus(self):
@@ -213,7 +281,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -238,7 +313,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def __cnvChemCompFormulaToElementCounts(self, fS):
@@ -262,7 +342,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
     def testChemCompInterpretFormula(self):
         """Test case -  read component dictionary index and fetch release status value from each chem_comp category"""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
@@ -285,7 +372,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompFetchAtoms(self):
@@ -293,7 +385,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -304,7 +403,6 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is None:
                     continue
-                #
                 atomIt = PdbxChemCompAtomIt(dC, self.__verbose, self.__lfh)
                 for atom in atomIt:
                     # atom.dump(self.__lfh)
@@ -330,7 +428,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompCompareDescriptors(self):
@@ -338,7 +441,14 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             indexD = myPersist.getIndex(dbFileName=self.__persistStorePath)
@@ -348,7 +458,6 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is None:
                     continue
-                #
                 dIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
                 for dA in dIt:
                     desA = dA.getDescriptor()
@@ -368,13 +477,25 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompMakeSearchIndex(self):
         """Test case -  read component dictionary index and build a search index."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         if not os.path.exists(self.__persistStorePath):  # pragma: no cover
             self.testChemCompCreateStore()
         try:
@@ -383,7 +504,6 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             ccIdx = {}
             myPersist.open(dbFileName=self.__persistStorePath)
             for ccId, _ccType in indexD["__containers__"]:
-                #
                 d = {}
                 d["nameList"] = []
                 d["typeCounts"] = {}
@@ -393,8 +513,6 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 d["smilesStereo"] = None
                 d["releaseStatus"] = None
                 d["subcomponentList"] = None
-                #
-                #
                 nameList = []
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
@@ -425,7 +543,6 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                             typeCounts[aType] += 1
                     d["typeCounts"] = typeCounts
 
-                #
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is not None:
                     rowIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
@@ -434,16 +551,13 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                         desType = row.getType()
                         desProgram = row.getProgram()
                         if "OpenEye" in desProgram:
-                            if desType == "SMILES_CANNONICAL":
-                                d["smilesStereo"] = des
-                            elif desType == "SMILES":
+                            if desType == "SMILES_CANNONICAL" or desType == "SMILES":  # noqa: PLR1714
                                 d["smilesStereo"] = des
                         elif "InChI" in desProgram:
                             if desType == "InChI":
                                 d["InChI"] = des
                             elif desType == "InChIKey":
                                 d["InChIKey"] = des
-                #
 
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_identifier")
                 if dC is not None:
@@ -459,7 +573,7 @@ class PdbxChemCompPersistTests(unittest.TestCase):
                 ccIdx[ccId] = d
 
             myPersist.close()
-            with open(self.__indexPath, "wb") as fout:
+            with builtins.open(self.__indexPath, "wb") as fout:
                 pickle.dump(ccIdx, fout)
 
         except:  # noqa: E722 pylint: disable=bare-except  # pragma: no cover
@@ -469,13 +583,25 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
     def testChemCompSearchIndex(self):
         """Test case -  read component index and test formula filters."""
         startTime = time.time()
-        self.__lfh.write("\nStarting %s %s at %s\n" % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime())))
+        self.__lfh.write(
+            "\nStarting %s %s at %s\n"
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+            )
+        )
         try:
             # A few target formulas to test search --
             #
@@ -484,15 +610,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
             # upper and lower bounds about the target formula.
             offsetU = 2
             offsetL = 2
-            #
-            with open(self.__indexPath, "rb") as fin:
+            with builtins.open(self.__indexPath, "rb") as fin:
                 ccIdx = pickle.load(fin)
-            #
             for tId, tf in targetD.items():
                 mList = []
                 for ccId, d in ccIdx.items():
                     refC = d["typeCounts"]
-                    #
                     mOk = True
                     for ftype, cnt in tf.items():
                         typeU = ftype.upper()
@@ -517,7 +640,12 @@ class PdbxChemCompPersistTests(unittest.TestCase):
         endTime = time.time()
         self.__lfh.write(
             "\nCompleted %s %s at %s (%d seconds)\n"
-            % (self.__class__.__name__, sys._getframe().f_code.co_name, time.strftime("%Y %m %d %H:%M:%S", time.localtime()), endTime - startTime)
+            % (
+                self.__class__.__name__,
+                inspect.currentframe().f_back.f_code.co_name,
+                time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
+                endTime - startTime,
+            )
         )
 
 
@@ -559,13 +687,10 @@ if __name__ == "__main__":  # pragma: no cover
     if not os.access("chemcomp.db", os.F_OK):
         mySuite1 = suiteChemCompBuildStore()
         unittest.TextTestRunner(verbosity=2).run(mySuite1)
-    #
     if not os.access("chemcomp-index.pic", os.F_OK):
         mySuite2 = suiteChemCompIndex()
         unittest.TextTestRunner(verbosity=2).run(mySuite2)
-    #
     mySuite3 = suiteChemCompSearchIndex()
     unittest.TextTestRunner(verbosity=2).run(mySuite3)
-    #
     mySuite4 = suiteChemCompUpdate()
     unittest.TextTestRunner(verbosity=2).run(mySuite4)

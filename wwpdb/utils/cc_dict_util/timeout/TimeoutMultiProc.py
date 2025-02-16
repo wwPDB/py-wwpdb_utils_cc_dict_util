@@ -18,12 +18,12 @@ Traceback (most recent call last):
    ...
 TimeoutException: timed out after 0 seconds
 
->>> sleep(.2)
+>>> sleep(0.2)
 0.2
 
->>> @timeout(.5)
+>>> @timeout(0.5)
 ... def exc():
-...     raise Exception('Houston we have problems!')
+...     raise Exception("Houston we have problems!")
 
 >>> exc()
 Traceback (most recent call last):
@@ -31,15 +31,16 @@ Traceback (most recent call last):
 Exception: Houston we have problems!
 
 """
+
 import multiprocessing
-import time
 
 # import logging
 import signal
+import time
 from functools import wraps
 
 
-class TimeoutException(Exception):
+class TimeoutException(Exception):  # noqa: N818
     def __init__(self, value):
         super(TimeoutException, self).__init__(value)
 
@@ -55,7 +56,7 @@ class TimeoutException(Exception):
 class RunableProcessing(multiprocessing.Process):  # pragma: no cover
     def __init__(self, func, *args, **kwargs):
         self.queue = multiprocessing.Queue(maxsize=1)
-        args = (func,) + args
+        args = (func,) + args  # noqa: RUF005
         multiprocessing.Process.__init__(self, target=self.run_func, args=args, kwargs=kwargs)
         # logger = multiprocessing.log_to_stderr()
         # logger.setLevel(logging.INFO)
@@ -64,7 +65,7 @@ class RunableProcessing(multiprocessing.Process):  # pragma: no cover
         try:
             result = func(*args, **kwargs)
             self.queue.put((True, result))
-        except Exception as e:
+        except Exception as e:  # noqa: BLE001
             self.queue.put((False, e))
 
     def done(self):
@@ -76,7 +77,7 @@ class RunableProcessing(multiprocessing.Process):  # pragma: no cover
 
 def timeout(seconds, message="Function call timed out"):
     def wrapper(function):
-        def _handleTimeout(signum, frame):
+        def _handleTimeout(signum, frame):  # noqa: ARG001
             raise TimeoutException(message)
 
         @wraps(function)
@@ -106,13 +107,13 @@ def timeoutMp(seconds, force_kill=True):  # pragma: no cover
                 if force_kill:
                     proc.terminate()
                 runtime = int(time.time() - now)
-                raise TimeoutException("timed out after {0} seconds".format(runtime))
-            assert proc.done()
+                exc = f"timed out after {runtime} seconds"
+                raise TimeoutException(exc)
+            assert proc.done()  # noqa: S101
             success, result = proc.result()
             if success:
                 return result
-            else:
-                raise result
+            raise result
 
         return inner
 

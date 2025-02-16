@@ -11,15 +11,18 @@
 A collection of chemical data and information.
 
 """
+
 __docformat__ = "restructuredtext en"
 __author__ = "John Westbrook"
 __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
+from typing import ClassVar
 
-class PdbxChemCompConstants(object):
-    _periodicTable = [
+
+class PdbxChemCompConstants:
+    _periodicTable: ClassVar = [  # noqa: N815
         "H",
         "HE",
         "LI",
