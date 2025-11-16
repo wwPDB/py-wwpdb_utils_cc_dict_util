@@ -35,20 +35,21 @@ Exception: Houston we have problems!
 from __future__ import annotations
 
 import multiprocessing
+import signal
 
 # import logging
-import signal
+import sys
 import time
 from functools import wraps
-from typing import TYPE_CHECKING, TypeVar, Any
+from typing import TYPE_CHECKING, Any, TypeVar
 
 if TYPE_CHECKING:
     from collections.abc import Callable
     from types import FrameType
 
-try:
+if sys.version_info >= (3, 10):
     from typing import ParamSpec
-except ImportError:
+else:
     from typing_extensions import ParamSpec
 
 # Define ParamSpec for preserving function signature
