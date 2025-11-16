@@ -23,6 +23,7 @@ classifiers = [
 ]
 dependencies = [
     "mmcif.utils >= 0.17",
+    "typing_extensions; python_version <= '3.9'"
 ]
 
 requires-python = ">=3.6"
