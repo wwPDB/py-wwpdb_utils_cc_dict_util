@@ -46,7 +46,10 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from types import FrameType
 
-from typing_extensions import ParamSpec
+try:
+    from typing import ParamSpec
+except ImportError:
+    from typing_extensions import ParamSpec
 
 # Define ParamSpec for preserving function signature
 P = ParamSpec("P")
@@ -69,7 +72,7 @@ class TimeoutException(Exception):  # noqa: N818
 
 class RunableProcessing(multiprocessing.Process):  # pragma: no cover
     def __init__(self, func: Callable[..., None], *args: Any, **kwargs: dict[str, Any]) -> None:
-        self.queue: multiprocessing.Queue[Any] = multiprocessing.Queue(maxsize=1)
+        self.queue: multiprocessing.Queue[Any] = multiprocessing.Queue(maxsize=1)  # pylint: disable=unsubscriptable-object
         args = (func,) + args  # noqa: RUF005
         multiprocessing.Process.__init__(self, target=self.run_func, args=args, kwargs=kwargs)
         # logger = multiprocessing.log_to_stderr()
@@ -109,7 +112,7 @@ def timeout(seconds: int, message: str = "Function call timed out") -> Callable[
     return wrapper
 
 
-def timeoutMp(seconds: int, force_kill: bool=True) -> Callable[[Callable[..., None]], Callable[P, R]]:  # pragma: no cover
+def timeoutMp(seconds: int, force_kill: bool = True) -> Callable[[Callable[..., None]], Callable[P, R]]:  # pragma: no cover
     def wrapper(function: Callable[..., None]) -> Callable[P, R]:
         @wraps(function)
         def inner(*args: P.args, **kwargs: P.kwargs) -> Any:
