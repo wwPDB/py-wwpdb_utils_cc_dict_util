@@ -32,56 +32,70 @@ Exception: Houston we have problems!
 
 """
 
+from __future__ import annotations
+
 import multiprocessing
 
 # import logging
 import signal
 import time
 from functools import wraps
+from typing import TYPE_CHECKING, TypeVar, Any
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import FrameType
+
+from typing_extensions import ParamSpec
+
+# Define ParamSpec for preserving function signature
+P = ParamSpec("P")
+# Define TypeVar for preserving function return type
+R = TypeVar("R")
 
 
 class TimeoutException(Exception):  # noqa: N818
-    def __init__(self, value):
+    def __init__(self, value: str) -> None:
         super(TimeoutException, self).__init__(value)
 
         self.value = value
 
-    def __str__(self):
+    def __str__(self) -> str:
         return str(self.value)
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return repr(self.value)
 
 
 class RunableProcessing(multiprocessing.Process):  # pragma: no cover
-    def __init__(self, func, *args, **kwargs):
-        self.queue = multiprocessing.Queue(maxsize=1)
+    def __init__(self, func: Callable[..., None], *args: Any, **kwargs: dict[str, Any]) -> None:
+        self.queue: multiprocessing.Queue[Any] = multiprocessing.Queue(maxsize=1)
         args = (func,) + args  # noqa: RUF005
         multiprocessing.Process.__init__(self, target=self.run_func, args=args, kwargs=kwargs)
         # logger = multiprocessing.log_to_stderr()
         # logger.setLevel(logging.INFO)
 
-    def run_func(self, func, *args, **kwargs):
+    def run_func(self, func: Callable[..., Any], *args: Any, **kwargs: dict[str, Any]) -> None:
         try:
             result = func(*args, **kwargs)
             self.queue.put((True, result))
         except Exception as e:  # noqa: BLE001
             self.queue.put((False, e))
 
-    def done(self):
+    def done(self) -> bool:
         return self.queue.full()
 
-    def result(self):
+    def result(self) -> Any:
         return self.queue.get()
 
 
-def timeout(seconds, message="Function call timed out"):
-    def wrapper(function):
-        def _handleTimeout(signum, frame):  # noqa: ARG001
+def timeout(seconds: int, message: str = "Function call timed out") -> Callable[[Callable[P, R]], Callable[P, R]]:
+    def wrapper(function: Callable[P, R]) -> Callable[P, R]:
+        def _handleTimeout(signum: int, frame: FrameType | None) -> None:  # noqa: ARG001
             raise TimeoutException(message)
 
         @wraps(function)
-        def wrapped(*args, **kwargs):
+        def wrapped(*args: P.args, **kwargs: P.kwargs) -> R:
             signal.signal(signal.SIGALRM, _handleTimeout)
             signal.alarm(seconds)
             try:
@@ -95,10 +109,10 @@ def timeout(seconds, message="Function call timed out"):
     return wrapper
 
 
-def timeoutMp(seconds, force_kill=True):  # pragma: no cover
-    def wrapper(function):
+def timeoutMp(seconds: int, force_kill: bool=True) -> Callable[[Callable[..., None]], Callable[P, R]]:  # pragma: no cover
+    def wrapper(function: Callable[..., None]) -> Callable[P, R]:
         @wraps(function)
-        def inner(*args, **kwargs):
+        def inner(*args: P.args, **kwargs: P.kwargs) -> Any:
             now = time.time()
             proc = RunableProcessing(function, *args, **kwargs)
             proc.start()
