@@ -113,7 +113,9 @@ def timeout(seconds: int, message: str = "Function call timed out") -> Callable[
     return wrapper
 
 
-def timeoutMp(seconds: int, force_kill: bool = True) -> Callable[[Callable[..., None]], Callable[P, R]]:  # pragma: no cover
+def timeoutMp(
+    seconds: int, force_kill: bool = True
+) -> Callable[[Callable[..., None]], Callable[P, R]]:  # pragma: no cover
     def wrapper(function: Callable[..., None]) -> Callable[P, R]:
         @wraps(function)
         def inner(*args: P.args, **kwargs: P.kwargs) -> Any:

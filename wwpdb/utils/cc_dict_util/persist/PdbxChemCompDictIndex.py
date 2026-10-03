@@ -26,6 +26,9 @@ __version__ = "V0.01"
 
 import sys
 import traceback
+from typing import Dict, List, Optional, TextIO, Tuple, cast
+
+from typing_extensions import NotRequired, TypedDict
 
 try:
     import cPickle as pickle  # type: ignore[import-not-found]  # noqa: S301,N813,S403
@@ -42,62 +45,89 @@ from wwpdb.utils.cc_dict_util.persist.PdbxChemCompPersist import (
 )
 
 
+class PdbxChemCompDictIndexType(TypedDict):
+    ccId: str
+    nameList: List[Optional[str]]
+    typeCounts: Dict[str, int]
+    InChI: Optional[str]
+    InChIKey: Optional[str]
+    InChIKey14: Optional[str]
+    smiles: Optional[str]
+    smilesList: List[str]
+    smilesStereo: Optional[str]
+    releaseStatus: Optional[str]
+    subcomponentList: Optional[str]
+    name: Optional[str]
+    type: Optional[str]
+    formula: Optional[str]
+    formulaWeight: Optional[str]
+    synonyms: NotRequired[Optional[str]]
+    ambiguousFlag: NotRequired[Optional[str]]
+
+
 class PdbxChemCompDictIndex:
     """Builds simplified indices of the serialized content in the chemical component dictionary."""
 
-    def __init__(self, verbose=True, log=sys.stderr):
+    def __init__(self, verbose: bool = True, log: TextIO = sys.stderr) -> None:
         self.__verbose = verbose
         self.__debug = False
         self.__lfh = log
 
-    def makeIndex(self, storePath="chemcomp.db", indexPath="chemcomp-index.pic"):
+    def makeIndex(
+        self, storePath: str = "chemcomp.db", indexPath: str = "chemcomp-index.pic"
+    ) -> Dict[str, PdbxChemCompDictIndexType]:
         """Create a search index from the contents of a persistent store of
         a chemical dictionary.  Store the index in indexPath.
         """
         return self.__makeIndex(storePath=storePath, indexPath=indexPath)
 
-    def makeParentComponentIndex(self, storePath="chemcomp.db", indexPath="chemcomp-parent-index.pic"):
+    def makeParentComponentIndex(
+        self, storePath: str = "chemcomp.db", indexPath: str = "chemcomp-parent-index.pic"
+    ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
         """Create a search index for parent components from the contents of a persistent store of
         a chemical dictionary.  Store the index in indexPath.
         """
         return self.__makeParentIndex(storePath=storePath, indexPath=indexPath)
 
-    def readIndex(self, indexPath="chemcomp-index.pic"):
+    def readIndex(self, indexPath: str = "chemcomp-index.pic") -> Dict[str, PdbxChemCompDictIndexType]:
         """Read and return search index."""
         return self.__readIndex(indexPath=indexPath)
 
-    def readParentComponentIndex(self, indexPath="chemcomp-parent-index.pic"):
+    def readParentComponentIndex(
+        self, indexPath: str = "chemcomp-parent-index.pic"
+    ) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
         """Read and return the parent component search index."""
         return self.__readParentIndex(indexPath=indexPath)
 
-    def __makeIndex(self, storePath, indexPath):
+    def __makeIndex(self, storePath: str, indexPath: str) -> Dict[str, PdbxChemCompDictIndexType]:
         """Read serialized component dictionary and build a search index.
 
         Index is a dictionary of selected items such as name, synonyns, formula, status and
         descriptors.  Index is stored as a pickled dictionary.
         """
-        ccIdx = {}
+        ccIdx: Dict[str, PdbxChemCompDictIndexType] = {}
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.open(dbFileName=storePath)
             containerList = myPersist.getStoreContainerIndex()
             for ccId in containerList:
-                d = {}
-                d["ccId"] = ccId
-                d["nameList"] = []
-                d["typeCounts"] = {}
-                d["InChI"] = None
-                d["InChIKey"] = None
-                d["InChIKey14"] = None
-                d["smiles"] = None
-                d["smilesList"] = []
-                d["smilesStereo"] = None
-                d["releaseStatus"] = None
-                d["subcomponentList"] = None
-                d["name"] = None
-                d["type"] = None
-                d["formula"] = None
-                d["formulaWeight"] = None
+                d: PdbxChemCompDictIndexType = {
+                    "ccId": ccId,
+                    "nameList": [],
+                    "typeCounts": {},
+                    "InChI": None,
+                    "InChIKey": None,
+                    "InChIKey14": None,
+                    "smiles": None,
+                    "smilesList": [],
+                    "smilesStereo": None,
+                    "releaseStatus": None,
+                    "subcomponentList": None,
+                    "name": None,
+                    "type": None,
+                    "formula": None,
+                    "formulaWeight": None,
+                }
                 nameList = []
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp")
                 if dC is not None:
@@ -123,13 +153,13 @@ class PdbxChemCompDictIndex:
                             nameList.append(synonyms)
 
                 # Compute element/type counts directly from the definition atom list
-                typeCounts = {}
+                typeCounts: Dict[str, int] = {}
                 dC = myPersist.fetchObject(containerName=ccId, objectName="chem_comp_atom")
                 if dC is not None:
-                    rowIt = PdbxChemCompAtomIt(dC, self.__verbose, self.__lfh)
-                    for row in rowIt:
-                        aType = row.getType()
-                        if row.getType() not in typeCounts:
+                    rowIt4 = PdbxChemCompAtomIt(dC, self.__verbose, self.__lfh)
+                    for row4 in rowIt4:
+                        aType = cast("str", row4.getType())
+                        if row4.getType() not in typeCounts:
                             typeCounts[aType] = 1
                         else:
                             typeCounts[aType] += 1
@@ -137,11 +167,11 @@ class PdbxChemCompDictIndex:
 
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_descriptor")
                 if dC is not None:
-                    rowIt = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
-                    for row in rowIt:
-                        des = row.getDescriptor()
-                        desType = row.getType()
-                        desProgram = row.getProgram()
+                    rowIt3 = PdbxChemCompDescriptorIt(dC, self.__verbose, self.__lfh)
+                    for row3 in rowIt3:
+                        des = cast("str", row3.getDescriptor())
+                        desType = cast("str", row3.getType())
+                        desProgram = cast("str", row3.getProgram())
                         if desType.startswith("SMILES"):
                             d["smilesList"].append(des)
                         if "OpenEye" in desProgram:
@@ -158,12 +188,12 @@ class PdbxChemCompDictIndex:
 
                 dC = myPersist.fetchObject(containerName=ccId, objectName="pdbx_chem_comp_identifier")
                 if dC is not None:
-                    rowIt = PdbxChemCompIdentifierIt(dC, self.__verbose, self.__lfh)
-                    for row in rowIt:
-                        iden = row.getIdentifier()
-                        idenType = row.getType()
-                        # idenProgram = row.getProgram()
-                        if "SYSTEMATIC" in idenType:
+                    rowIt2 = PdbxChemCompIdentifierIt(dC, self.__verbose, self.__lfh)
+                    for row2 in rowIt2:
+                        iden = row2.getIdentifier()
+                        idenType = row2.getType()
+                        # idenProgram = row2.getProgram()
+                        if "SYSTEMATIC" in cast("str", idenType):
                             nameList.append(iden)
 
                 d["nameList"] = nameList
@@ -185,13 +215,13 @@ class PdbxChemCompDictIndex:
 
         return ccIdx
 
-    def __makeParentIndex(self, storePath, indexPath):
+    def __makeParentIndex(self, storePath: str, indexPath: str) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
         """Read serialized component dictionary and indices of parent/child relationships for modified residues.
 
         Index is stored as a pickled dictionary in indexPath.
         """
-        pD = {}
-        cD = {}
+        pD: Dict[str, List[str]] = {}
+        cD: Dict[str, List[str]] = {}
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.open(dbFileName=storePath)
@@ -202,8 +232,8 @@ class PdbxChemCompDictIndex:
                 if dC is not None:
                     rowIt = PdbxChemCompIt(dC, self.__verbose, self.__lfh)
                     for row in rowIt:
-                        pCompId = row.getNstdParentId()
-                        compId = row.getId()
+                        pCompId = cast("str", row.getNstdParentId())
+                        compId = cast("str", row.getId())
                         if (pCompId is not None) and (len(pCompId) > 0) and (pCompId not in ["?", "."]):
                             if "," in pCompId:
                                 pList = pCompId.split(",")
@@ -239,14 +269,14 @@ class PdbxChemCompDictIndex:
         return pD, cD
 
     @staticmethod
-    def __readParentIndex(indexPath):
+    def __readParentIndex(indexPath: str) -> Tuple[Dict[str, List[str]], Dict[str, List[str]]]:
         """Internal method to recover the pickled index file."""
-        pD = {}
-        cD = {}
+        pD: Dict[str, List[str]] = {}
+        cD: Dict[str, List[str]] = {}
         try:
             ifh = open(indexPath, "rb")
-            pD = pickle.load(ifh)  # noqa: S301
-            cD = pickle.load(ifh)  # noqa: S301
+            pD = cast("Dict[str, List[str]]", pickle.load(ifh))  # noqa: S301
+            cD = cast("Dict[str, List[str]]", pickle.load(ifh))  # noqa: S301
             ifh.close()
             return pD, cD
         except:  # noqa: E722 pylint: disable=bare-except
@@ -254,10 +284,10 @@ class PdbxChemCompDictIndex:
         return pD, cD
 
     @staticmethod
-    def __readIndex(indexPath):
+    def __readIndex(indexPath: str) -> Dict[str, PdbxChemCompDictIndexType]:
         """Internal method to recover the pickled index file."""
         try:
             with open(indexPath, "rb") as fin:
-                return pickle.load(fin)  # noqa: S301
+                return cast("Dict[str, PdbxChemCompDictIndexType]", pickle.load(fin))  # noqa: S301
         except:  # noqa: E722 pylint: disable=bare-except
             return {}

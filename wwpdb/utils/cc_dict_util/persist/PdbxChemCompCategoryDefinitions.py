@@ -18,9 +18,14 @@ __version__ = "V0.01"
 
 from typing import ClassVar
 
+from mmcif_utils.style.PdbxCategoryStyleBase import (
+    PdbxStyleCatInfoL,
+    PdbxStyleCatItemD,
+)
+
 
 class PdbxChemCompCategoryDefinitions:
-    _categoryInfo: ClassVar = [  # noqa: N815
+    _categoryInfo: ClassVar[PdbxStyleCatInfoL] = [  # noqa: N815
         ("chem_comp", "key-value"),
         ("chem_comp_atom", "table"),
         ("chem_comp_bond", "table"),
@@ -31,7 +36,7 @@ class PdbxChemCompCategoryDefinitions:
         ("pdbx_chem_comp_atom_edit", "table"),
         ("pdbx_chem_comp_bond_edit", "table"),
     ]
-    _cDict: ClassVar = {  # noqa: N815
+    _cDict: ClassVar[PdbxStyleCatItemD] = {  # noqa: N815
         "chem_comp": [
             ("_chem_comp.id", "%s", "str", ""),
             ("_chem_comp.name", "%s", "str", ""),

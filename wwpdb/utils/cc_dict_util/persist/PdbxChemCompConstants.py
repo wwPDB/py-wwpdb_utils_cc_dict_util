@@ -18,11 +18,11 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-from typing import ClassVar
+from typing import ClassVar, List
 
 
 class PdbxChemCompConstants:
-    _periodicTable: ClassVar = [  # noqa: N815
+    _periodicTable: ClassVar[List[str]] = [  # noqa: N815
         "H",
         "HE",
         "LI",

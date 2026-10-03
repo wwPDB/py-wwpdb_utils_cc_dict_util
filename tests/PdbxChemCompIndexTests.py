@@ -21,7 +21,6 @@ __email__ = "jwest@rcsb.rutgers.edu"
 __license__ = "Creative Commons Attribution 3.0 Unported"
 __version__ = "V0.01"
 
-import inspect
 import os
 import os.path
 import platform
@@ -35,7 +34,7 @@ from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictIndex import PdbxChemCompD
 
 # pylint: disable=protected-access
 class PdbxChemCompDictIndexTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.__lfh = sys.stdout
         self.__verbose = True
         #
@@ -48,17 +47,17 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
         self.__indexPath = os.path.join(outdir, "chemcomp-index.pic")
         self.__parentIndexPath = os.path.join(outdir, "chemcomp-parent-index.pic")
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def testCreateIndex(self):
+    def testCreateIndex(self) -> None:
         """Test case -  create search index from persistent store"""
         startTime = time.time()
         self.__lfh.write(
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -74,20 +73,20 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
-    def testCreateParentIndex(self):
+    def testCreateParentIndex(self) -> None:
         """Test case -  create search index for parent residues from persistent store"""
         startTime = time.time()
         self.__lfh.write(
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -108,20 +107,20 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
-    def testReadIndex(self):
+    def testReadIndex(self) -> None:
         """Test case -  read search index"""
         startTime = time.time()
         self.__lfh.write(
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -137,21 +136,21 @@ class PdbxChemCompDictIndexTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
 
-def suiteChemCompBuildIndex():  # pragma: no cover
+def suiteChemCompBuildIndex() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateIndex"))
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testReadIndex"))
     return suiteSelect
 
 
-def suiteChemCompBuildParentIndex():  # pragma: no cover
+def suiteChemCompBuildParentIndex() -> unittest.TestSuite:  # pragma: no cover
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictIndexTests("testCreateParentIndex"))
     return suiteSelect
