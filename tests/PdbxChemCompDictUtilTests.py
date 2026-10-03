@@ -24,22 +24,23 @@ __version__ = "V0.01"
 #    from io import open as open
 import builtins
 import fnmatch
-import inspect
 import os
 import os.path
 import sys
 import time
 import traceback
 import unittest
+from typing import List, Optional
+
+from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
 
 from wwpdb.utils.cc_dict_util.persist.PdbxChemCompDictUtil import PdbxChemCompDictUtil
-from wwpdb.utils.config.ConfigInfo import ConfigInfo, getSiteId
 
 
 # pylint: disable=protected-access
 @unittest.skip("Until tests ported")
 class PdbxChemCompDictUtilTests(unittest.TestCase):
-    def setUp(self):
+    def setUp(self) -> None:
         self.__lfh = sys.stdout
         self.__verbose = True
 
@@ -55,17 +56,19 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
         self.__persistStorePathA = "chemcompA.db"
         self.__persistStorePathB = "chemcompB.db"
 
-    def tearDown(self):
+    def tearDown(self) -> None:
         pass
 
-    def getPathList(self, topPath, pattern="*", excludeDirs=None, recurse=True):
+    def getPathList(
+        self, topPath: str, pattern: str = "*", excludeDirs: Optional[List[str]] = None, recurse: bool = True
+    ) -> List[str]:
         """Return a list of file paths in the input topPath which satisfy the input search criteria.
 
         This version does not follow symbolic links.
         """
         if excludeDirs is None:
             excludeDirs = []
-        pathList = []
+        pathList: List[str] = []
         try:
             names = os.listdir(topPath)
         except OSError:
@@ -92,14 +95,14 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
 
         return pathList
 
-    def testCreateStoreDict(self):
+    def testCreateStoreDict(self) -> None:
         """Test case -  read full chemical component dictionary and  create persistent store."""
         startTime = time.time()
         self.__lfh.write(
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -115,13 +118,13 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
-    def testCreateStorePathList(self):
+    def testCreateStorePathList(self) -> None:
         """Test case -  create persistent store from a path list of chemical component defintions.
 
         Extract the path list from the distributed path list file.
@@ -131,7 +134,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -152,13 +155,13 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
-    def testCreateStorePathListFS(self):
+    def testCreateStorePathListFS(self) -> None:
         """Test case -  create persistent store from a path list of chemical component defintions.
 
         Extract the path list by searching the file system.
@@ -168,7 +171,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -189,13 +192,13 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
-    def testUpdateStorePathList(self):
+    def testUpdateStorePathList(self) -> None:
         """Test case -  update persistent store from a path list of chemical component defintions.
 
         Extract the path list from the distributed path list file.
@@ -205,7 +208,7 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nStarting %s %s at %s\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
             )
         )
@@ -226,14 +229,14 @@ class PdbxChemCompDictUtilTests(unittest.TestCase):
             "\nCompleted %s %s at %s (%d seconds)\n"
             % (
                 self.__class__.__name__,
-                inspect.currentframe().f_back.f_code.co_name,
+                self._testMethodName,
                 time.strftime("%Y %m %d %H:%M:%S", time.localtime()),
                 endTime - startTime,
             )
         )
 
 
-def suiteChemCompBuildStore():
+def suiteChemCompBuildStore() -> unittest.TestSuite:
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictUtilTests("testCreateStorePathListFS"))
     suiteSelect.addTest(PdbxChemCompDictUtilTests("testCreateStorePathList"))
@@ -241,7 +244,7 @@ def suiteChemCompBuildStore():
     return suiteSelect
 
 
-def suiteChemCompUpdateStore():
+def suiteChemCompUpdateStore() -> unittest.TestSuite:
     suiteSelect = unittest.TestSuite()
     suiteSelect.addTest(PdbxChemCompDictUtilTests("testUpdateStorePathList"))
     return suiteSelect

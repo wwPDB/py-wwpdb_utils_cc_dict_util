@@ -20,7 +20,10 @@ __version__ = "V0.01"
 import os
 import sys
 import traceback
+from typing import List, Optional, TextIO
 
+from mmcif.api.DataCategory import DataCategory
+from mmcif.api.PdbxContainers import ContainerBase
 from mmcif_utils.persist.PdbxCoreIoAdapter import PdbxCoreIoAdapter as PdbxIoAdapter
 from mmcif_utils.persist.PdbxPersist import PdbxPersist
 
@@ -28,44 +31,50 @@ from mmcif_utils.persist.PdbxPersist import PdbxPersist
 class PdbxChemCompDictUtil:
     """Maintenance methods for creating and updating persistent stores of chemical dictionaries."""
 
-    def __init__(self, verbose=True, log=sys.stderr):
+    def __init__(self, verbose: bool = True, log: TextIO = sys.stderr):
         self.__verbose = verbose
         self.__debug = False
         self.__lfh = log
 
-    def makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
+    def makeStoreFromFile(self, dictPath: str, storePath: str = "chemcomp.db", minSize: int = 10) -> bool:
         """Create a new persistent store from input chemical dictionary file."""
         return self.__makeStoreFromFile(dictPath=dictPath, storePath=storePath, minSize=minSize)
 
-    def makeStoreFromPathList(self, pathList, storePath="chemcomp.db"):
+    def makeStoreFromPathList(self, pathList: List[str], storePath: str = "chemcomp.db") -> bool:
         """Create a new persistent store from a path list of chemical component definitions."""
         return self.__makeStoreFromPathList(pathList=pathList, storePath=storePath)
 
-    def updateStoreByFile(self, pathList, storePath="chemcomp.db"):
+    def updateStoreByFile(self, pathList: List[str], storePath: str = "chemcomp.db") -> bool:
         """Update the persistant store with the contents of the input path list"""
         return self.__updateStoreByFile(pathList, storePath=storePath)
 
-    def updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
+    def updateStoreByObject(
+        self,
+        inpObject: DataCategory,
+        containerName: Optional[str] = None,
+        containerType: str = "data",
+        storePath: str = "chemcomp.db",
+    ) -> bool:
         """Update the persistant store with the contents of the input object in the input named container."""
         return self.__updateStoreByObject(
             inpObject, containerName=containerName, containerType=containerType, storePath=storePath
         )
 
-    def updateStoreByContainer(self, containerList, storePath="chemcomp.db"):
+    def updateStoreByContainer(self, containerList: List[ContainerBase], storePath: str = "chemcomp.db") -> bool:
         """Update the persistant store with the contents of the input container list."""
         return self.__updateStoreByContainer(containerList=containerList, storePath=storePath)
 
     ##
 
     @staticmethod
-    def __getFileSize(fPath):
+    def __getFileSize(fPath: str) -> int:
         try:
             st = os.stat(fPath)
             return st.st_size
         except:  # noqa: E722 pylint: disable=bare-except
             return 0
 
-    def __makeStoreFromFile(self, dictPath, storePath="chemcomp.db", minSize=10):
+    def __makeStoreFromFile(self, dictPath: str, storePath: str = "chemcomp.db", minSize: int = 10) -> bool:
         """Internal method to create a new persistent store from input chemical dictionary file."""
         try:
             ok = False
@@ -90,7 +99,7 @@ class PdbxChemCompDictUtil:
                 traceback.print_exc(file=self.__lfh)
             return False
 
-    def __makeStoreFromPathList(self, pathList, storePath="chemcomp.db", minSize=10):
+    def __makeStoreFromPathList(self, pathList: List[str], storePath: str = "chemcomp.db", minSize: int = 10) -> bool:
         """Internal method to create a new persistent store from a path list
         of chemical component definitions.
         """
@@ -123,7 +132,7 @@ class PdbxChemCompDictUtil:
                 traceback.print_exc(file=self.__lfh)
             return False
 
-    def __updateStoreByFile(self, pathList, storePath="chemcomp.db"):
+    def __updateStoreByFile(self, pathList: List[str], storePath: str = "chemcomp.db") -> bool:
         """Internal method to update the persistant store with the contents of the input list of
         chemical component definition files.
         """
@@ -140,23 +149,31 @@ class PdbxChemCompDictUtil:
                 traceback.print_exc(file=self.__lfh)
             return False
 
-    def __updateStoreByObject(self, inpObject, containerName=None, containerType="data", storePath="chemcomp.db"):
+    def __updateStoreByObject(
+        self,
+        inpObject: DataCategory,
+        containerName: Optional[str] = None,
+        containerType: str = "data",
+        storePath: str = "chemcomp.db",
+    ) -> bool:
         """Internal method to update the persistant store with the contents of the input object in the input named container."""
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateOneObject(
                 inpObject, dbFileName=storePath, containerName=containerName, containerType=containerType
             )
+            return True
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
             return False
 
-    def __updateStoreByContainer(self, containerList, storePath="chemcomp.db"):
+    def __updateStoreByContainer(self, containerList: List[ContainerBase], storePath: str = "chemcomp.db") -> bool:
         """Internal method to update the persistant store with the contents of the input container list."""
         try:
             myPersist = PdbxPersist(self.__verbose, self.__lfh)
             myPersist.updateContainerList(dbFileName=storePath, containerList=containerList)
+            return True
         except:  # noqa: E722 pylint: disable=bare-except
             if self.__debug:
                 traceback.print_exc(file=self.__lfh)
